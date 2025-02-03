@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" version="26.0.10">
+  <diagram name="Page-1" id="YAiH8xaDrNcEKyo47Klx">
+    <mxGraphModel dx="786" dy="438" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="xLjRIKFggBFyaXyNJNWd-1" target="xLjRIKFggBFyaXyNJNWd-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-1" value="&lt;b&gt;Kirjautumissivu:&lt;/b&gt;&lt;div&gt;-Divarin omistaja kirjautuu&lt;/div&gt;&lt;div&gt;-Asiakas kirjautuu&lt;/div&gt;&lt;div&gt;-&lt;i&gt;Unohtunut salasana?&lt;/i&gt;&lt;/div&gt;&lt;div&gt;&lt;i&gt;-Uuden käyttäjän rekisteröinti?&lt;/i&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="170" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-2" value="&lt;b&gt;Hakusivu&lt;/b&gt;:&lt;div&gt;-Teoksen haku&lt;/div&gt;&lt;div&gt;-Teoksen lisäys tilaukseen/ostoskoriin&lt;/div&gt;&lt;div&gt;/tietojärjestelmään&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="230" y="170" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-5" value="Ulos-&lt;div&gt;kirjaus&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="590" y="200" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-11" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="414" y="50" width="140" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-4" value="&lt;b&gt;Tilauslomake/&lt;/b&gt;&lt;div&gt;&lt;b&gt;Ostoskori:&lt;/b&gt;&lt;/div&gt;&lt;div&gt;-Toimitustietojen lisäys&lt;/div&gt;&lt;div&gt;-Tilauksen vahvistus&lt;/div&gt;&lt;div&gt;-Postikulujen laskeminen ja tallennus taustalla&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xLjRIKFggBFyaXyNJNWd-11" vertex="1">
+          <mxGeometry y="200" width="130" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-3" value="&lt;b&gt;Teoksen lisäyslomake:&lt;/b&gt;&lt;div&gt;tietokantaan D1 &amp;amp; D2&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="xLjRIKFggBFyaXyNJNWd-11" vertex="1">
+          <mxGeometry y="90" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-21" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="xLjRIKFggBFyaXyNJNWd-11" target="xLjRIKFggBFyaXyNJNWd-5" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="130" as="sourcePoint" />
+            <mxPoint x="180" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-22" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="xLjRIKFggBFyaXyNJNWd-11" target="xLjRIKFggBFyaXyNJNWd-5" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="250" as="sourcePoint" />
+            <mxPoint x="180" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-19" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="225" as="sourcePoint" />
+            <mxPoint x="410" y="175" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xLjRIKFggBFyaXyNJNWd-20" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.008;entryY=0.6;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="xLjRIKFggBFyaXyNJNWd-2" target="xLjRIKFggBFyaXyNJNWd-4" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="360" as="sourcePoint" />
+            <mxPoint x="410" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
