@@ -64,6 +64,25 @@ uusi myyntikappale. Oletetaan, että teoksen yleiset tiedot on talletettu ennen 
 tietokantoihin. Toteuta tätä varten kolmannen divarin D3 tietokanta, joka voi rakenteellisesti noudattaa
 divarin D1 kantaa.
 
+```sql
+-- ensin tehdään funktio jonka trigger ajaa
+CREATE OR REPLACE FUNCTION insert_into_keskusdivari()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, myyntipäivämäärä, paino, teostyyppi_id)
+    VALUES (NEW.nimi, NEW.isbn, NEW.hinta, NEW.sisäänostohinta, NEW.myyntipäivämäärä, NEW.paino, NEW.teostyyppi_id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- lisätään triggeri
+CREATE TRIGGER trigger_insert_keskusdivari
+AFTER INSERT ON D1_divari.Teos
+FOR EACH ROW
+EXECUTE FUNCTION insert_into_keskusdivari();
+
+```
+
 T7: Oletetaan, että Divarin tietokantaan on lisätty kirjoja, joita ei löydy keskustietokannasta. (Simuloi
 tilannetta lisäämällä D1:n pari uutta teosta.) Päivitä keskusdivarin tiedot. Tässä siis siirretään divarin D1
 tietokannasta (kaavioista) uusien teosten tiedot keskustietokantaan. Tämän voi toteuttaa vertaamalla
