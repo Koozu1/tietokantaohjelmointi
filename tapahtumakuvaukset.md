@@ -20,8 +20,8 @@ löytyvät tietokannasta. (käyttäjäroolina divarin D2 ylläpitäjä)
 
 ```sql
 
-INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, myyntipäivämäärä, paino, teostyyppi_id)
-VALUES ('Kirja3', '3', 10, 7.50, NULL, 1, 3);
+INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
+VALUES ('Kirja3', '3', 10, 7.50, 1, 3);
 
 ```
 
@@ -65,8 +65,8 @@ divarin D1 kantaa.
 CREATE OR REPLACE FUNCTION insert_into_keskusdivari()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, myyntipäivämäärä, paino, teostyyppi_id)
-    VALUES (NEW.nimi, NEW.isbn, NEW.hinta, NEW.sisäänostohinta, NEW.myyntipäivämäärä, NEW.paino, NEW.teostyyppi_id);
+    INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
+    VALUES (NEW.nimi, NEW.isbn, NEW.hinta, NEW.sisäänostohinta, NEW.paino, NEW.teostyyppi_id);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -92,15 +92,15 @@ INSERT INTO D1_divari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1
 INSERT INTO Keskusdivari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1'), (2, 'Kirja2');
 
 -- Lisätään pari teosta
-INSERT INTO D1_divari.Teos (nimi, isbn, hinta, sisäänostohinta, myyntipäivämäärä, paino, teostyyppi_id)
+INSERT INTO D1_divari.Teos (nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
 VALUES
-    ('Kirja1', '1', 15.99, 7.50, NULL, 0.8, 1),
-    ('Kirja2', '2', 12.50, 5.00, NULL, 0.5, 2);
+    ('Kirja1', '1', 15.99, 7.50, 0.8, 1),
+    ('Kirja2', '2', 12.50, 5.00, 0.5, 2);
 
 -- Päivitetään koko keskusdivarin Teos-taulu D1-divarin Teoksilla. Voi myös tehdä triggerillä/manuaalisesti.
-INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, myyntipäivämäärä, paino, teostyyppi_id)
+INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
 SELECT
-    d1.nimi, d1.isbn, d1.hinta, d1.sisäänostohinta, d1.myyntipäivämäärä, d1.paino, d1.teostyyppi_id
+    d1.nimi, d1.isbn, d1.hinta, d1.sisäänostohinta, d1.paino, d1.teostyyppi_id
 FROM D1_divari.Teos d1
 LEFT JOIN Keskusdivari.Teos k ON d1.isbn = k.isbn
 WHERE k.teos_id IS NULL;
