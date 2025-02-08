@@ -1,8 +1,8 @@
 T1: Asiakas kirjautuu/rekisteröityy järjestelmään
 
 ```sql
-INSERT INTO Keskusdivari.Asiakas (nimi, osoite, email, puhelin)
-VALUES ('aapo', 'tie 2', 'aapo@aapo.fi', '0445337896');
+INSERT INTO Keskusdivari.Käyttäjä (nimi, osoite, email, puhelin, pääkäyttäjä)
+VALUES ('aapo', 'tie 2', 'aapo@aapo.fi', '0445337896', 'false');
 ```
 
 T2: Lisätään yksittäisen teoksen (jota ei ole aikaisemmin tallennettu) tiedot divarin D1 tietokantaan ja
@@ -115,9 +115,3 @@ T8: Divari D4 haluaa liittyä keskusdivariin. Heidän datansa on XML-muodossa, j
 liitteessä 2 annettua DTD:tä. Toteuta toiminto, joka konfiguroi ja siirtää datan keskusdivarin tietokantaan.
 Tee esimerkkiaineistoon vähintään kaksi teosta, joissa kaksi nidettä. Muita kuin kuvattuja tietoja ei tarvitse
 huomioida.
-
-
-
-
-
-

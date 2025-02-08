@@ -1,3 +1,5 @@
+#Tällä voi esimerkiksi ajaa postgressiä omalla koneella, tarvitsee dockerin.
+
 services:
   postgres:
     image: postgres:latest
