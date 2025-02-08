@@ -115,3 +115,9 @@ T8: Divari D4 haluaa liittyä keskusdivariin. Heidän datansa on XML-muodossa, j
 liitteessä 2 annettua DTD:tä. Toteuta toiminto, joka konfiguroi ja siirtää datan keskusdivarin tietokantaan.
 Tee esimerkkiaineistoon vähintään kaksi teosta, joissa kaksi nidettä. Muita kuin kuvattuja tietoja ei tarvitse
 huomioida.
+
+
+
+
+
+
