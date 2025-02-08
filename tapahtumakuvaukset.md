@@ -40,9 +40,9 @@ WITH teos_data AS (
     WHERE isbn = '1'
 ), new_order AS (
     INSERT INTO D1_divari.Tilaus (
-        kokonaispaino, postikulut, kokonaishinta, divari_id, käyttäjä_id
+        kokonaispaino, postikulut, kokonaishinta, myyntipäivämäärä, divari_id, käyttäjä_id
     )
-    SELECT paino, 5.00, hinta, 1, 1
+    SELECT paino, 5.00, hinta, NOW(), 1, 1
     FROM teos_data
     RETURNING tilaus_id
 )
