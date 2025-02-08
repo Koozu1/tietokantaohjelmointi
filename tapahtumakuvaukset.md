@@ -40,7 +40,7 @@ WITH teos_data AS (
     WHERE isbn = '1'
 ), new_order AS (
     INSERT INTO D1_divari.Tilaus (
-        kokonaispaino, postikulut, kokonaishinta, divari_id, asiakas_id
+        kokonaispaino, postikulut, kokonaishinta, divari_id, käyttäjä_id
     )
     SELECT paino, 5.00, hinta, 1, 1
     FROM teos_data
@@ -54,10 +54,6 @@ SELECT teos_id, tilaus_id FROM teos_data, new_order;
 T5: Asiakas tekee tilauksen, jonka paino ylittää 2000 grammaa (käyttäjäroolina asiakas). Lähetys joudutaan
 siis jakamaan useaan erään. Käytännön yksi tilaus voi kohdistua usean divarin teoksiin. Tätä ei kuitenkaan
 työssä huomioida vaan lasketaan postituskulut siten, että ne kohdistuisivat saman divarin teoksiin.
-
-- Lasketaan backendissa sopiva tapa jakaa kirjat eri tilauksiin
-- Luodaan Tilaukset
-- Luodaan Ostoskori jokaista kirjaa kohden, joka osoittaa sopivaan Tilaukseen.
 
 T6: Toteuta triggeri, joka päivittää keskusdivarin automaattisesti, kun divarin omaan tietokantaan tuodaan
 uusi myyntikappale. Oletetaan, että teoksen yleiset tiedot on talletettu ennen lisäystä molempiin
