@@ -25,6 +25,12 @@ CREATE TABLE Keskusdivari.Divari_D2 (
     web_sivu VARCHAR(255)
 ); 
 
+-- Teostyyppi
+CREATE TABLE Keskusdivari.Teostyyppi (
+    teostyyppi_id SERIAL PRIMARY KEY,
+    tyyppi_nimi VARCHAR(100) NOT NULL
+);
+
 -- Yksittäinen teos
 CREATE TABLE Keskusdivari.Teos (
     teos_id SERIAL PRIMARY KEY,
@@ -37,11 +43,7 @@ CREATE TABLE Keskusdivari.Teos (
     FOREIGN KEY (teostyyppi_id) REFERENCES Keskusdivari.Teostyyppi(teostyyppi_id)
 );
 
--- Teostyyppi
-CREATE TABLE Keskusdivari.Teostyyppi (
-    teostyyppi_id SERIAL PRIMARY KEY,
-    tyyppi_nimi VARCHAR(100) NOT NULL
-);
+
 
 
 -- Tilaus D2 divarille
@@ -102,6 +104,11 @@ CREATE TABLE D1_divari.Divari_D1 (
     web_sivu VARCHAR(255)
 ); 
 
+-- D1 Teostyypit
+CREATE TABLE D1_divari.Teostyyppi (
+    teostyyppi_id SERIAL PRIMARY KEY,
+    tyyppi_nimi VARCHAR(100) NOT NULL
+);
 
 -- D1 Yksittäinen teos
 CREATE TABLE D1_divari.Teos (
@@ -114,14 +121,6 @@ CREATE TABLE D1_divari.Teos (
     teostyyppi_id INT,
     FOREIGN KEY (teostyyppi_id) REFERENCES D1_divari.Teostyyppi(teostyyppi_id)
 );
-
-
--- D1 Teostyypit
-CREATE TABLE D1_divari.Teostyyppi (
-    teostyyppi_id SERIAL PRIMARY KEY,
-    tyyppi_nimi VARCHAR(100) NOT NULL
-);
-
 
 -- Tilaus D1 divarille
 CREATE TABLE D1_divari.Tilaus (
