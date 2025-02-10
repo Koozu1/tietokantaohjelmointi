@@ -14,46 +14,97 @@ mutta keskusdivariin voi kuulua monta yksittäistä divaria.
 
 ATTRIBUUTTIEN ARVOALUEET JA RAJOITUKSET:
 
-Teostyyppi
-teostyyppi_id: SERIAL, PRIMARY KEY
-tyyppi_nimi: VARCHAR(100), NOT NULL
 
-Teos
-teos_id: SERIAL, PRIMARY KEY
-isbn: VARCHAR(20), NOT NULL
-hinta: DECIMAL(10, 2), NOT NULL
-sisäänostohinta: DECIMAL(10, 2), NOT NULL
-myyntipäivämäärä: DATE
-paino: DECIMAL(10, 2), NOT NULL
-teostyyppi_id: INT, FOREIGN KEY REFERENCES Teostyyppi(teostyyppi_id)
+Keskusdivari Skeeman Taulut:
 
-Asiakas
-asiakasID: INT, PRIMARY KEY
+Käyttäjärekisteri:
+käyttäjä_id: SERIAL, PRIMARY KEY
 nimi: VARCHAR(50)
 osoite: VARCHAR(100)
 email: VARCHAR(50)
 puhelin: VARCHAR(13)
-tilausID: INT, FOREIGN KEY REFERENCES Tilaus(tilausID)
+pääkäyttäjä: BOOLEAN
 
-Tilaus
-tilausID: INT, PRIMARY KEY
-kokonaispaino: INT
-postikulut: FLOAT
-kokonaishinta: FLOAT
-teosID: INT, FOREIGN KEY REFERENCES Teos(teosID)
-
-KeskusDivari
-keskus_id: SERIAL, PRIMARY KEY
+Divari D2:
+divari_id: SERIAL, PRIMARY KEY
 nimi: VARCHAR(255), NOT NULL
 osoite: VARCHAR(255), NOT NULL
 web_sivu: VARCHAR(255)
-Divari
+
+Teostyyppi:
+teostyyppi_id: SERIAL, PRIMARY KEY
+tyyppi_nimi: VARCHAR(100), NOT NULL
+
+Yksittäinen Teos:
+teos_id: SERIAL, PRIMARY KEY
+nimi: VARCHAR(255), NOT NULL
+isbn: VARCHAR(20), NOT NULL
+hinta: DECIMAL(10, 2), NOT NULL
+sisäänostohinta: DECIMAL(10, 2), NOT NULL
+paino: DECIMAL(10, 2), NOT NULL
+teostyyppi_id: INT, FOREIGN KEY REFERENCES Keskusdivari.Teostyyppi(teostyyppi_id)
+
+Tilaus D2 Divarille:
+tilaus_id: SERIAL, PRIMARY KEY
+kokonaispaino: INT
+postikulut: DECIMAL(10, 2)
+kokonaishinta: DECIMAL(10, 2)
+myyntipäivämäärä: DATE
+divari_id: INT, FOREIGN KEY REFERENCES Keskusdivari.Divari_D2(divari_id)
+käyttäjä_id: INT, FOREIGN KEY REFERENCES Keskusdivari.Käyttäjä(käyttäjä_id)
+
+Ostoskori D2:
+teos_id: INT, PRIMARY KEY (teos_id, tilaus_id), FOREIGN KEY REFERENCES Keskusdivari.Teos(teos_id)
+tilaus_id: INT, PRIMARY KEY (teos_id, tilaus_id), FOREIGN KEY REFERENCES Keskusdivari.Tilaus(tilaus_id)
+
+Teos D1:
+teos_id: INT, PRIMARY KEY
+nimi: VARCHAR(255), NOT NULL
+isbn: VARCHAR(20), NOT NULL
+hinta: DECIMAL(10, 2), NOT NULL
+sisäänostohinta: DECIMAL(10, 2), NOT NULL
+paino: DECIMAL(10, 2)
+teostyyppi_id: INT
+
+Teostyyppi D1:
+teostyyppi_id: INT, PRIMARY KEY
+tyyppi_nimi: VARCHAR(100), NOT NULL
+
+
+
+D1_divari Skeeman Taulut
+
+Divari D1:
 divari_id: SERIAL, PRIMARY KEY
-keskus_id: INT, FOREIGN KEY REFERENCES KeskusDivari(id)
-teos_id: INT, FOREIGN KEY REFERENCES Teos(id)
-teostyyppi_id: INT, FOREIGN KEY REFERENCES TeosTyyppi(id)
 nimi: VARCHAR(255), NOT NULL
 osoite: VARCHAR(255), NOT NULL
+web_sivu: VARCHAR(255)
+
+Teostyyppi:
+teostyyppi_id: SERIAL, PRIMARY KEY
+tyyppi_nimi: VARCHAR(100), NOT NULL
+
+Yksittäinen Teos:
+teos_id: SERIAL, PRIMARY KEY
+nimi: VARCHAR(255), NOT NULL
+isbn: VARCHAR(20), NOT NULL
+hinta: DECIMAL(10, 2), NOT NULL
+sisäänostohinta: DECIMAL(10, 2), NOT NULL
+paino: DECIMAL(10, 2), NOT NULL
+teostyyppi_id: INT, FOREIGN KEY REFERENCES D1_divari.Teostyyppi(teostyyppi_id)
+
+Tilaus D1 Divarille:
+tilaus_id: SERIAL, PRIMARY KEY
+kokonaispaino: INT
+postikulut: DECIMAL(10, 2)
+kokonaishinta: DECIMAL(10, 2)
+myyntipäivämäärä: DATE
+divari_id: INT, FOREIGN KEY REFERENCES D1_divari.Divari_D1(divari_id)
+käyttäjä_id: INT, FOREIGN KEY REFERENCES Keskusdivari.Käyttäjä(käyttäjä_id)
+
+Ostoskori D1:
+teos_id: INT, PRIMARY KEY (teos_id, tilaus_id), FOREIGN KEY REFERENCES D1_divari.Teos(teos_id)
+tilaus_id: INT, PRIMARY KEY (teos_id, tilaus_id), FOREIGN KEY REFERENCES D1_divari.Tilaus(tilaus_id)
 
 
 VALITUT TOTEUTUSVÄLINEET:
