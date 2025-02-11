@@ -9,9 +9,13 @@ T2: Lisätään yksittäisen teoksen (jota ei ole aikaisemmin tallennettu) tiedo
 keskustietokantaan.
 
 ```sql
+--Lisätään teokset
+INSERT INTO D1_divari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1');
+INSERT INTO Keskusdivari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1');
 
-INSERT INTO D1_divari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1'), (2, 'Kirja2');
-INSERT INTO Keskusdivari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1'), (2, 'Kirja2');
+-- Lisätään teos. Tälle on triggeri T6 joka lisää teoksen myös keskusdivariin.
+INSERT INTO D1_divari.Teos (nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
+VALUES ('Kirja1', '1', 10, 7.50, 1, 1);
 
 ```
 
