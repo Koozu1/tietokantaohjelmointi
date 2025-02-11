@@ -23,7 +23,12 @@ T3: Lisätään yksittäinen teos divarille D2 tietokantaan (siis keskusdivarin 
 löytyvät tietokannasta. (käyttäjäroolina divarin D2 ylläpitäjä)
 
 ```sql
+--En ihan ymmärrä mitä haetaan käyttäjärooleilla, mutta näin voidaan rajoittaa oikeudet, jotta kukaan muu kuin ylläpitäjä ei voi seuraavaa inserttiä tehdä
+REVOKE ALL ON TABLE Keskusdivari.Teos FROM public;
+GRANT SELECT ON TABLE Keskusdivari.Teos TO public;
+GRANT INSERT, UPDATE, DELETE ON TABLE Keskusdivari.Teos TO "ylläpitäjä";
 
+-- Ja sitten insertti, joka enää mahdollista vain ylläpitäjänä kirjautuneena.
 INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
 VALUES ('Kirja3', '3', 10, 7.50, 1, 3);
 
