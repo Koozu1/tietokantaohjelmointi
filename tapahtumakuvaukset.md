@@ -101,7 +101,7 @@ VALUES
     ('Kirja1', '1', 15.99, 7.50, 0.8, 1),
     ('Kirja2', '2', 12.50, 5.00, 0.5, 2);
 
--- Päivitetään koko keskusdivarin Teos-taulu D1-divarin Teoksilla. Voi myös tehdä triggerillä/manuaalisesti.
+-- Päivitetään koko keskusdivarin Teos-taulu D1-divarin Teoksilla.
 INSERT INTO Keskusdivari.Teos (nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
 SELECT
     d1.nimi, d1.isbn, d1.hinta, d1.sisäänostohinta, d1.paino, d1.teostyyppi_id
