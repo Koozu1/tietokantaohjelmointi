@@ -9,7 +9,7 @@ T2: Lisätään yksittäisen teoksen (jota ei ole aikaisemmin tallennettu) tiedo
 keskustietokantaan.
 
 ```sql
---Lisätään teokset
+--Lisätään teostyypit
 INSERT INTO D1_divari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1');
 INSERT INTO Keskusdivari.Teostyyppi (teostyyppi_id, tyyppi_nimi) VALUES (1, 'Kirja1');
 
