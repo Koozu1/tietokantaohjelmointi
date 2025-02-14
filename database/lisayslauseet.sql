@@ -1,3 +1,5 @@
+--Ryhmä 12: Noora Ahonen, Niina Nevala, Onni Pylvänen
+
 -- KESKUSDIVARI SKEEMA
 -- Tarvittaessa poista tilaus ja ostoskori lisäyslauseet!
 

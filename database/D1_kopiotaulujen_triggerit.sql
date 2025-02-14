@@ -1,3 +1,5 @@
+--Ryhmä 12: Noora Ahonen, Niina Nevala, Onni Pylvänen
+
 -- Kun pääkäyttäjä lisää/muokkaa/poistaa D1_divarin varastosta teoksia, tämä trigger 
 -- tekee muutokset automaattisesti myös Keskusdivarin kopiotauluihin D1:stä
 

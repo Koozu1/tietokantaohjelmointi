@@ -1,3 +1,6 @@
+--Ryhmä 12: Noora Ahonen, Niina Nevala, Onni Pylvänen
+
+
 CREATE SCHEMA Keskusdivari;
 CREATE SCHEMA D1_divari;
 
@@ -13,6 +16,7 @@ CREATE TABLE Keskusdivari.Käyttäjä (
     osoite  VARCHAR(100),
     email VARCHAR(50),
     puhelin VARCHAR(13),
+    salasana VARCHAR(50),
     pääkäyttäjä BOOLEAN
 );
 
