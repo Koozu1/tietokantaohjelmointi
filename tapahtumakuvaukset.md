@@ -1,3 +1,7 @@
+Ryhmä 12: Onni Pylvänen, Noora Ahonen, Niina Nevala
+Tehty tässä kohtaa ainakin T1-T4 (perusratkaisu)
+
+
 T1: Asiakas kirjautuu/rekisteröityy järjestelmään
 
 ```sql
@@ -24,6 +28,7 @@ löytyvät tietokannasta. (käyttäjäroolina divarin D2 ylläpitäjä)
 
 ```sql
 --En ihan ymmärrä mitä haetaan käyttäjärooleilla, mutta näin voidaan rajoittaa oikeudet, jotta kukaan muu kuin ylläpitäjä ei voi seuraavaa inserttiä tehdä
+--Käyttäjähallinta tullaan todennäköisesti toteuttamaan käyttöliittymän puolella mieluummin.
 REVOKE ALL ON TABLE Keskusdivari.Teos FROM public;
 GRANT SELECT ON TABLE Keskusdivari.Teos TO public;
 GRANT INSERT, UPDATE, DELETE ON TABLE Keskusdivari.Teos TO "ylläpitäjä";

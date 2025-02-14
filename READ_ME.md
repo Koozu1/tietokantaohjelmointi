@@ -1,15 +1,17 @@
+Ryhmä 12: Noora Ahonen, Niina Nevala, Onni Pylvänen
+
 UML MUUNNOS TIETOKANTAKAAVIOKSI:
 
 UML kaavio muutettiin graafiseksi esitykseksi tietokannasta. 
-UML-luokat muutettiin tietokannan tauluiksi, 
-määriteltiin avaimet (katso alta arvoalueista ja rajoituksista) sekä 
-luokkien väliset suhteet.
-Asiakas voi tehdä monta tilausta, yhdellä tilauksella on vain yksi asiakas.
-Tilauksessa voi olla useampi teos, teos voi olla vain yhdessä tilauksessa.
-Divarissa voi olla monta teostyyppiä ja monia teoksia, yksittäinen teos voi olla vain yhdessä divarissa, teostyyppi voi olla monessa divarissa.
-Teos voi olla yhtä teostyyppiä, sama teostyyppi voi olla monessa teoksessa.
-Yhdellä divarilla voi olla vain yksi keskusdivari,
-mutta keskusdivariin voi kuulua monta yksittäistä divaria.
+UML-luokat muutettiin tietokannan tauluiksi, määriteltiin avaimet 
+(katso alta arvoalueista ja rajoituksista) sekä luokkien väliset suhteet.
+
+SUHTEET:
+1. Asiakas voi tehdä monta tilausta, yhdellä tilauksella on vain yksi asiakas.
+2. Tilauksessa voi olla useampi teos, tietty teos on vain yhdessä tilauksessa.
+3. Divarissa voi olla monia teoksia, yksittäinen teos on vain yhdessä divarissa
+4. Teostyyppi voi olla monessa teoksessa, teoksella on vain yksi teostyyppi
+5. Divari voi hoitaa useita tilauksia, yksi tilaus voi olla vain yhdessä divarissa
 
 
 ATTRIBUUTTIEN ARVOALUEET JA RAJOITUKSET:
@@ -23,6 +25,7 @@ nimi: VARCHAR(50)
 osoite: VARCHAR(100)
 email: VARCHAR(50)
 puhelin: VARCHAR(13)
+salasana: VARCHAR(50)
 pääkäyttäjä: BOOLEAN
 
 Divari D2:
@@ -57,7 +60,7 @@ Ostoskori D2:
 teos_id: INT, PRIMARY KEY (teos_id, tilaus_id), FOREIGN KEY REFERENCES Keskusdivari.Teos(teos_id)
 tilaus_id: INT, PRIMARY KEY (teos_id, tilaus_id), FOREIGN KEY REFERENCES Keskusdivari.Tilaus(tilaus_id)
 
-Teos D1:
+Kopio Teos D1:
 teos_id: INT, PRIMARY KEY
 nimi: VARCHAR(255), NOT NULL
 isbn: VARCHAR(20), NOT NULL
@@ -66,13 +69,13 @@ sisäänostohinta: DECIMAL(10, 2), NOT NULL
 paino: DECIMAL(10, 2)
 teostyyppi_id: INT
 
-Teostyyppi D1:
+Kopio Teostyyppi D1:
 teostyyppi_id: INT, PRIMARY KEY
 tyyppi_nimi: VARCHAR(100), NOT NULL
 
 
 
-D1_divari Skeeman Taulut
+D1_divari Skeeman Taulut:
 
 Divari D1:
 divari_id: SERIAL, PRIMARY KEY
