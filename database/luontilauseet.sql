@@ -16,7 +16,7 @@ CREATE TABLE Keskusdivari.Käyttäjä (
     osoite  VARCHAR(100),
     email VARCHAR(50),
     puhelin VARCHAR(13),
-    salasana VARCHAR(50),
+    salasana VARCHAR(60),
     pääkäyttäjä BOOLEAN
 );
 
