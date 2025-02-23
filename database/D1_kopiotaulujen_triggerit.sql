@@ -10,18 +10,19 @@ $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         -- Kun D1_divari.Teos -tauluun lisätään uusi rivi
-        INSERT INTO Keskusdivari.Teos_D1
-            (teos_id, nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
+        INSERT INTO keskusdivari.teos_d1
+            (teos_id, nimi, tekijä, isbn, hinta, sisäänostohinta, paino, teostyyppi_id)
         VALUES
-            (NEW.teos_id, NEW.nimi, NEW.isbn, NEW.hinta, NEW.sisäänostohinta,
+            (NEW.teos_id, NEW.nimi, NEW.tekijä, NEW.isbn, NEW.hinta, NEW.sisäänostohinta,
              NEW.paino, NEW.teostyyppi_id);
 
         RETURN NEW;
 
     ELSIF TG_OP = 'UPDATE' THEN
         -- Kun D1_divari.Teos -rivin tietoja päivitetään
-        UPDATE Keskusdivari.Teos_D1
+        UPDATE keskusdivari.teos_d1
            SET nimi = NEW.nimi,
+           	   tekijä = NEW.tekijä,
                isbn = NEW.isbn,
                hinta = NEW.hinta,
                sisäänostohinta = NEW.sisäänostohinta,
@@ -33,7 +34,7 @@ BEGIN
         
     ELSIF TG_OP = 'DELETE' THEN
         -- Kun D1_divari.Teos -rivi poistetaan
-        DELETE FROM Keskusdivari.Teos_D1
+        DELETE FROM keskusdivari.teos_d1
          WHERE teos_id = OLD.teos_id;
 
         RETURN OLD;
@@ -47,7 +48,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER teos_copy_trigger
 AFTER INSERT OR UPDATE OR DELETE
-ON d1_divari.Teos
+ON d1_divari.teos
 FOR EACH ROW
 EXECUTE PROCEDURE d1_divari.teos_copy_trigger_func();
 
@@ -62,13 +63,13 @@ EXECUTE PROCEDURE d1_divari.teos_copy_trigger_func();
 -- Teostyyppi-taulua
 
 
-CREATE OR REPLACE FUNCTION D1_divari.teostyyppi_copy_trigger_func()
+CREATE OR REPLACE FUNCTION d1_divari.teostyyppi_copy_trigger_func()
 RETURNS TRIGGER AS
 $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         -- Kun D1_divari.Teostyyppi -tauluun lisätään uusi rivi
-        INSERT INTO Keskusdivari.Teostyyppi_D1
+        INSERT INTO keskusdivari.teostyyppi_d1
             (teostyyppi_id, tyyppi_nimi)
         VALUES
             (NEW.teostyyppi_id, NEW.tyyppi_nimi);
@@ -77,7 +78,7 @@ BEGIN
 
     ELSIF TG_OP = 'UPDATE' THEN
         -- Kun D1_divari.Teostyyppi -rivin tietoja päivitetään
-        UPDATE Keskusdivari.Teostyyppi_D1
+        UPDATE keskusdivari.teostyyppi_d1
            SET tyyppi_nimi = NEW.tyyppi_nimi
          WHERE teostyyppi_id = OLD.teostyyppi_id;
 
@@ -93,6 +94,6 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER teostyyppi_copy_trigger
 AFTER INSERT OR UPDATE
-ON d1_divari.Teostyyppi
+ON d1_divari.teostyyppi
 FOR EACH ROW
 EXECUTE PROCEDURE d1_divari.teostyyppi_copy_trigger_func();
