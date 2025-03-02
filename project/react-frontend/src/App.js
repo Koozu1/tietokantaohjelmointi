@@ -8,7 +8,8 @@ import {
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Frontpage from "./pages/Frontpage";
-import LisaaTeos from "./pages/LisaaTeos"; 
+import LisaaTeos from "./pages/LisaaTeos";
+import Search from "./pages/Search";
 
 const App = () => (
   <Router>
@@ -17,7 +18,8 @@ const App = () => (
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/frontpage" element={<Frontpage />} />
-      <Route path="/lisaaTeos" element={<LisaaTeos />} /> 
+      <Route path="/lisaaTeos" element={<LisaaTeos />} />
+      <Route path="/search" element={<Search />} />
     </Routes>
   </Router>
 );
