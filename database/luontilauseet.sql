@@ -5,6 +5,7 @@ CREATE SCHEMA keskusdivari;
 CREATE SCHEMA d1_divari;
 
 CREATE TYPE myynnin_tila AS ENUM ('vapaa', 'varattu', 'myyty');
+CREATE TYPE teostyyppi AS ENUM ('cd', 'kirja', 'lehti', 'sarjakuva', 'jne');
 
 -----------------------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ CREATE TABLE keskusdivari.teos (
     tekijä VARCHAR(255) NOT NULL,
     isbn VARCHAR(50) NOT NULL,
     julkaisuvuosi INT NOT NULL,
-    teostyyppi  NOT NULL,
+    teostyyppi teostyyppi NOT NULL,
     paino INT NOT NULL,
     lähde_skeema VARCHAR(20), --Tälle aina oletuksena 'keskus'
     divari_id INT,
@@ -99,7 +100,8 @@ CREATE TABLE keskusdivari.lähetys (
 CREATE TABLE d1_divari.divari_d1 ( 
     divari_id SERIAL PRIMARY KEY, 
     nimi VARCHAR(255) NOT NULL, 
-    osoite VARCHAR(255) NOT NULL
+    osoite VARCHAR(255) NOT NULL,
+    web_sivu VARCHAR(255) NOT NULL
 ); 
 
 
@@ -110,7 +112,7 @@ CREATE TABLE d1_divari.teos (
     tekijä VARCHAR(255) NOT NULL,
     isbn VARCHAR(50) NOT NULL,
     julkaisuvuosi INT NOT NULL,
-    teostyyppi  NOT NULL,
+    teostyyppi teostyyppi NOT NULL,
     paino INT NOT NULL,
     lähde_skeema VARCHAR(20), --Tälle aina oletuksena 'd1'
     divari_id INT,
