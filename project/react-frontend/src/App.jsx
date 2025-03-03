@@ -10,18 +10,24 @@ import Login from "./pages/Login";
 import Frontpage from "./pages/Frontpage";
 import LisaaTeos from "./pages/LisaaTeos";
 import Search from "./pages/Search";
+import Layout from "./components/Layout";
+import { AppProvider } from "./context/AppContext";
 
 const App = () => (
-  <Router>
-    <Routes>
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/frontpage" element={<Frontpage />} />
-      <Route path="/lisaaTeos" element={<LisaaTeos />} />
-      <Route path="/search" element={<Search />} />
-    </Routes>
-  </Router>
+  <AppProvider>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/frontpage" element={<Frontpage />} />
+          <Route path="/lisaaTeos" element={<LisaaTeos />} />
+          <Route path="/search" element={<Search />} />
+        </Routes>
+      </Layout>
+    </Router>
+  </AppProvider>
 );
 
 export default App;
