@@ -13,10 +13,14 @@ $$
 BEGIN
 
     IF TG_OP = 'UPDATE' THEN
-        -- Kun keskusdivari.nide -rivin tietoja päivitetään
-        UPDATE d1_divari.nide
-           SET tila = NEW.tila
-         WHERE nide_id = OLD.nide_id;
+        
+    	-- Tarkistetaan, että vanhan (tai uuden) rivin lähde_skeema on 'd1'
+        IF OLD.lähde_skeema = 'd1' THEN
+        
+        	-- Päivitetään d1_divari.nide -rivi vain, jos se on D1:n kopio
+        	UPDATE d1_divari.nide
+           	SET tila = NEW.tila
+         	WHERE nide_id = OLD.nide_id;
 
         RETURN NEW;
         
