@@ -14,7 +14,7 @@ router.post("/lisaateos", async (req, res) => {
 
     const nideResult = await pool.query(
       'INSERT INTO d1_divari.nide (hinta, sisäänostohinta, lähde_skeema, tila, teos_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [hinta, sisäänostohinta, 'd1', 'available', teos_id]
+      [hinta, sisäänostohinta, 'd1', 'vapaa', teos_id]
     );
 
     res.status(201).json({ teos: teosResult.rows[0], nide: nideResult.rows[0] });
