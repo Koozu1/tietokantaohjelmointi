@@ -5,6 +5,9 @@ const Frontpage = () => {
   return (
     <div>
       <Link to="/LisaaTeos">Lisää teos</Link>
+      <p>
+        <Link to="/search">Hakuun</Link>
+      </p>
     </div>
   );
 };
