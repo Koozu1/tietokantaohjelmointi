@@ -98,8 +98,8 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE TRIGGER teostyyppi_copy_trigger
+CREATE TRIGGER nide_copy_trigger
 AFTER INSERT OR UPDATE
-ON d1_divari.teostyyppi
+ON d1_divari.nide
 FOR EACH ROW
-EXECUTE PROCEDURE d1_divari.teostyyppi_copy_trigger_func();
+EXECUTE PROCEDURE d1_divari.nide_copy_trigger_func();
