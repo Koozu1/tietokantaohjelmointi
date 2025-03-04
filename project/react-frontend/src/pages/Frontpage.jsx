@@ -8,6 +8,7 @@ const Frontpage = () => {
       <p>
         <Link to="/search">Hakuun</Link>
       </p>
+      <div class="w-1/2 bg-purple-300">ASDSADD</div>
     </div>
   );
 };

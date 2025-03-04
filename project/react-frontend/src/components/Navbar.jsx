@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { user, cart } = useAppContext();
+  console.log(user);
 
   return (
     <nav className="p-4 bg-blue-500 text-white flex justify-between">
       <div>
-        <Link to="/" className="mr-4">
-          Home
+        <Link to="/frontpage" className="mr-4">
+          Etusivu
         </Link>
         <Link to="/search">Haku</Link>
       </div>
@@ -20,6 +21,7 @@ const Navbar = () => {
         ) : (
           <Link to="/login">Kirjaudu</Link>
         )}
+        {user && <Link to="/logout">Kirjaudu ulos</Link>}
       </div>
     </nav>
   );
