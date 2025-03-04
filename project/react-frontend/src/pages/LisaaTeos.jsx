@@ -1,37 +1,36 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import Notification from "../components/Notification";
 
 const LisaaTeos = () => {
   const [nimi, setNimi] = useState("");
+  const [tekijä, setTekijä] = useState("");
   const [isbn, setIsbn] = useState("");
+  const [julkaisuvuosi, setJulkaisuvuosi] = useState("");
+  const [teostyyppi, setTeostyyppi] = useState("");
+  const [paino, setPaino] = useState("");
   const [hinta, setHinta] = useState("");
   const [sisäänostohinta, setSisäänostohinta] = useState("");
-  const [paino, setPaino] = useState("");
-  const [teostyyppi, setTeostyyppi] = useState("");
   const [notification, setNotification] = useState({ message: "", type: "" });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newTeos = { nimi, isbn, hinta, sisäänostohinta, paino, teostyyppi };
+    const newTeos = { nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, hinta, sisäänostohinta };
 
     try {
-      const response = await fetch("http://localhost:3000/lisaateos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newTeos),
-      });
+      const response = await axios.post("http://localhost:5000/lisaateos", newTeos);
 
-      if (response.ok) {
+      if (response.status === 201) {
         setNotification({ message: "Teos lisätty onnistuneesti!", type: "success" });
         setNimi("");
+        setTekijä("");
         setIsbn("");
+        setJulkaisuvuosi("");
+        setTeostyyppi("");
+        setPaino("");
         setHinta("");
         setSisäänostohinta("");
-        setPaino("");
-        setTeostyyppi("");
       } else {
         setNotification({ message: "Virhe lisättäessä teosta.", type: "error" });
       }
@@ -57,11 +56,48 @@ const LisaaTeos = () => {
           />
         </div>
         <div>
+          <label>Tekijä:</label>
+          <input
+            type="text"
+            value={tekijä}
+            onChange={(e) => setTekijä(e.target.value)}
+            required
+          />
+        </div>
+        <div>
           <label>ISBN:</label>
           <input
             type="text"
             value={isbn}
             onChange={(e) => setIsbn(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Julkaisuvuosi:</label>
+          <input
+            type="number"
+            value={julkaisuvuosi}
+            onChange={(e) => setJulkaisuvuosi(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Teostyyppi:</label>
+          <input
+            type="text"
+            value={teostyyppi}
+            onChange={(e) => setTeostyyppi(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Paino:</label>
+          <input
+            type="number"
+            step="0.01"
+            value={paino}
+            onChange={(e) => setPaino(e.target.value)}
             required
           />
         </div>
@@ -82,25 +118,6 @@ const LisaaTeos = () => {
             step="0.01"
             value={sisäänostohinta}
             onChange={(e) => setSisäänostohinta(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Paino:</label>
-          <input
-            type="number"
-            step="0.01"
-            value={paino}
-            onChange={(e) => setPaino(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Teostyyppi:</label>
-          <input
-            type="text"
-            value={teostyyppi}
-            onChange={(e) => setTeostyyppi(e.target.value)}
             required
           />
         </div>
