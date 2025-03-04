@@ -1,9 +1,14 @@
 import { useAppContext } from "../context/AppContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const { user, cart } = useAppContext();
-  console.log(user);
+  const { user, cart, logout } = useAppContext();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <nav className="p-4 bg-blue-500 text-white flex justify-between">
@@ -17,11 +22,13 @@ const Navbar = () => {
       <div className="flex items-center space-x-4">
         <Link to="/cart">Ostoskori ({cart.length})</Link>
         {user ? (
-          <span>Tervetuloa, {user.name}</span>
+          <>
+            <span>Tervetuloa, {user.name}</span>
+            <button onClick={handleLogout}>Kirjaudu uloss</button>
+          </>
         ) : (
           <Link to="/login">Kirjaudu</Link>
         )}
-        {user && <Link to="/logout">Kirjaudu ulos</Link>}
       </div>
     </nav>
   );
