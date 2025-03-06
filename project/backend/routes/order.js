@@ -24,16 +24,21 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-router.get("/search", verifyToken, async (req, res) => {
-  const data = req.body;
+router.post("/order", verifyToken, async (req, res) => {
+  console.log("HIT order");
+  console.log(req.body.ids);
+  const { teos_id } = req.body;
   try {
     const result = await pool.query(
       "SELECT teos_id, nimi, tekijä, julkaisuvuosi, teostyyppi, paino, divari_id FROM keskusdivari.teos"
     );
+    console.log(result.rows);
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.delete("/cart", verifyToken, async (req, res) => {});
 
 export default router;

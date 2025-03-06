@@ -6,9 +6,8 @@ import { useAppContext } from "../context/AppContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const { setUser } = useAppContext();
+  const { login, user } = useAppContext();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,20 +16,21 @@ const Login = () => {
         email,
         password,
       });
-      localStorage.setItem("token", res.data.token);
-      setToken(res.data.token);
       const userData = res.data.user;
-      setUser({
-        id: userData.id,
-        name: userData.username,
-        email: userData.email,
+      login({
+        token: res.data.token,
+        userData: {
+          id: userData.id,
+          name: userData.username,
+          email: userData.email,
+        },
       });
     } catch (error) {
       alert("Error logging in: " + error.response.data.error);
     }
   };
 
-  if (token) return <Navigate to="/frontpage" />;
+  if (user) return <Navigate to="/frontpage" />;
 
   return (
     <form onSubmit={handleLogin}>

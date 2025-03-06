@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-
-const addToOstoskori = async (teos_id) => {
-  console.log("Adding to shopping cart id", teos_id);
-};
+import { useAppContext } from "../context/AppContext";
 
 const Search = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [books, setBooks] = useState([]);
-  const token = localStorage.getItem("token");
 
-  console.log("TOKEN IS ", token);
-  useEffect(() => {
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, [token]);
+  const { cart, setCart, user, token } = useAppContext();
+
+  const addToOstoskori = async (teos_id) => {
+    console.log("Adding to shopping cart id", teos_id);
+    console.log(cart);
+    setCart((cart) => [...cart, teos_id]);
+  };
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -37,11 +35,6 @@ const Search = () => {
     }
   };
 
-  if (isAuthenticated === false) {
-    console.log("REDIRECTING TO LOGIN, state ", isAuthenticated);
-    return <Navigate to="/login" />;
-  }
-
   return (
     <div>
       <h1>Haku</h1>
@@ -57,7 +50,7 @@ const Search = () => {
         {books.length > 0 ? (
           <ul>
             {books.map((book, index) => (
-              <div>
+              <div class="p-4 border rounded-lg shadow-sm">
                 <h3>
                   {index + 1}: {book.nimi}
                 </h3>
@@ -69,6 +62,7 @@ const Search = () => {
                   onClick={() => {
                     addToOstoskori(book.teos_id);
                   }}
+                  class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
                 >
                   Lisää ostoskoriin
                 </button>
