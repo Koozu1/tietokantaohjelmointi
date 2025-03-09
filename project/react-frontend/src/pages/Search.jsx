@@ -25,7 +25,7 @@ const Search = () => {
     if (!searchTerm.trim()) return;
     try {
       const response = await axios.get(
-        `http://localhost:5000/search?query=${searchTerm}`,
+        `http://localhost:5001/search?query=${searchTerm}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

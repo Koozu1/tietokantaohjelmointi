@@ -19,7 +19,7 @@ const LisaaTeos = () => {
     const newTeos = { nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, hinta, sisäänostohinta };
 
     try {
-      const response = await axios.post("http://localhost:5000/lisaateos", newTeos);
+      const response = await axios.post("http://localhost:5001/lisaateos", newTeos);
 
       if (response.status === 201) {
         setNotification({ message: "Teos lisätty onnistuneesti!", type: "success" });
