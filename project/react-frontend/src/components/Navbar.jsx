@@ -24,7 +24,7 @@ const Navbar = () => {
         {user ? (
           <>
             <span>Tervetuloa, {user.name}</span>
-            <button onClick={handleLogout}>Kirjaudu uloss</button>
+            <button onClick={handleLogout}>Kirjaudu ulos</button>
           </>
         ) : (
           <Link to="/login">Kirjaudu</Link>
