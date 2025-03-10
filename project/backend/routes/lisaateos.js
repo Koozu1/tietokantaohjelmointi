@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.post("/lisaateos", async (req, res) => {
   const { nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, hinta, sisäänostohinta } = req.body;
+  // Ensure divari_id is removed if accidentally present
+  delete req.body.divari_id;
   try {
     const teosResult = await pool.query(
       'INSERT INTO d1_divari.teos (nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, lähde_skeema) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING teos_id',
