@@ -2,27 +2,10 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { pool } from "../db.js";
+import { verifyToken } from "../verifyToken.js";
+import { getOrder } from "./order.js";
 
 const router = express.Router();
-
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "No token provided" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    console.log(error);
-    return res.status(401).json({ message: "Invalid or expired token" });
-  }
-};
 
 router.post("/getCart", verifyToken, async (req, res) => {
   console.log("HIT Cart add");
@@ -36,6 +19,29 @@ router.post("/getCart", verifyToken, async (req, res) => {
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+//LISÄYS
+router.post("/cart", verifyToken, async (req, res) => {
+  const userId = req.user.id;
+  const { itemId } = req.body;
+  try {
+    const orderId = await getOrder(userId);
+    const cartId = await pool.query(
+      "INSERT INTO keskusdivari.ostoskori (teos_id, tilaus_id) VALUES ($1, $2) ON CONFLICT (teos_id, tilaus_id) DO NOTHING",
+      [itemId, orderId]
+    );
+    const countRes = await pool.query(
+      "SELECT COUNT(*) FROM keskusdivari.ostoskori WHERE tilaus_id = $1",
+      [orderId]
+    );
+    const count = countRes.rows[0].count;
+    console.log("count now", count);
+    res.json({ count: count });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+    return;
   }
 });
 

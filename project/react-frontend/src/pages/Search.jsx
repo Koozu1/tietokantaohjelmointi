@@ -11,40 +11,33 @@ const Search = () => {
 
   const { cart, setCart, user, token } = useAppContext();
 
-  const addToOstoskori = async (teos_id) => {
-    console.log("Adding to shopping cart id", teos_id);
-    console.log(cart);
-    setCart((cart) => [...cart, teos_id]);
-  };
-
   if (!user) {
     return <Navigate to="/login" />;
   }
 
+  const addToOstoskori = async (teos_id) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/cart",
+        { itemId: teos_id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.count) {
+        setCart(response.data.count);
+      }
+    } catch {}
+  };
+
   const handleSearch = async () => {
-    if (!author.trim() && !title.trim() && !type.trim()) return;
     try {
       const response = await axios.get(
         `http://localhost:5001/search?author=${author}&title=${title}&type=${type}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      if (response.data.length === 0) {
-        setAuthor("");
-        setTitle("");
-        setType("");
-        setBooks([]);
-        alert("Hakutuloksia ei löytynyt annetuilla kriteereillä.");
-      } else {
-        setBooks(response.data);
-      }
+      setBooks(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);
-      setAuthor("");
-      setTitle("");
-      setType("");
       setBooks([]);
-      alert("Hakutuloksia ei löytynyt annetuilla kriteereillä.");
     }
   };
 

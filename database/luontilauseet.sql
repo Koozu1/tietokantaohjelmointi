@@ -73,11 +73,9 @@ CREATE TABLE keskusdivari.tilaus (
 CREATE TABLE keskusdivari.ostoskori ( 
     teos_id INT,  
     tilaus_id INT,
-    nide_id INT,
-	PRIMARY KEY (teos_id, tilaus_id, nide_id),
+	PRIMARY KEY (teos_id, tilaus_id),
     FOREIGN KEY (teos_id) REFERENCES keskusdivari.teos(teos_id),
-    FOREIGN KEY (tilaus_id) REFERENCES keskusdivari.tilaus(tilaus_id),
-    FOREIGN KEY (nide_id) REFERENCES keskusdivari.nide(nide_id)
+    FOREIGN KEY (tilaus_id) REFERENCES keskusdivari.tilaus(tilaus_id)
 ); 
 
 -- Lähetys

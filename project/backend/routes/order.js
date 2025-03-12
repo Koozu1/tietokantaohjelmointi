@@ -1,28 +1,8 @@
 import express from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { pool } from "../db.js";
+import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
-
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "No token provided" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    console.log(error);
-    return res.status(401).json({ message: "Invalid or expired token" });
-  }
-};
 
 router.post("/order", verifyToken, async (req, res) => {
   console.log("HIT order");
@@ -40,5 +20,28 @@ router.post("/order", verifyToken, async (req, res) => {
 });
 
 router.delete("/cart", verifyToken, async (req, res) => {});
+
+//UTIL TO GET ORDER. Ei käytössä
+export const getOrder = async (userId) => {
+  const res = await pool.query(
+    "SELECT tilaus_id FROM keskusdivari.Tilaus WHERE käyttäjä_id = $1",
+    [userId]
+  );
+  if (res.rowCount > 0) {
+    return res.rows[0].tilaus_id;
+  }
+  console.log("STEP 2");
+  const divariId = (
+    await pool.query("SELECT divari_id FROM keskusdivari.divari_d2")
+  ).rows[0].divari_id;
+  console.log("STEP 3");
+
+  const newOrder = await pool.query(
+    "INSERT INTO Keskusdivari.Tilaus (divari_id, käyttäjä_id) VALUES ($1, $2) RETURNING tilaus_id",
+    [divariId, userId]
+  );
+  console.log("NEW ORDER IS", newOrder);
+  return newOrder.rows[0].tilaus_id;
+};
 
 export default router;
