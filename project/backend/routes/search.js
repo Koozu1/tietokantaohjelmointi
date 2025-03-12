@@ -25,13 +25,46 @@ const verifyToken = (req, res, next) => {
 };
 
 router.get("/search", verifyToken, async (req, res) => {
-  const data = req.body;
+  console.log("HIT SEARCH");
+
+  const { author, title, type } = req.query;
+
+  let baseQuery = `
+  SELECT t.*
+  FROM Keskusdivari.Teos t
+  JOIN Keskusdivari.Nide n ON t.teos_id = n.teos_id
+  WHERE n.tila = 'vapaa'
+  `;
+
+  // Taulukko, johon kerätään parametreja
+  const params = [];
+
+  // Jos käyttäjä antoi title-hakusanan, lisätään ehto
+  if (title) {
+    baseQuery += ` AND t.nimi ILIKE $${params.length + 1}`;
+    params.push(`%${title}%`); // Villikortit ympärille
+  }
+
+  // Jos käyttäjä antoi author-hakusanan, lisätään ehto
+  if (author) {
+    baseQuery += ` AND t.tekijä ILIKE $${params.length + 1}`;
+    params.push(`%${author}%`);
+  }
+
+  // Jos käyttäjä antoi type-hakusanan, lisätään ehto
+  if (type) {
+    baseQuery += ` AND t.teostyyppi = $${params.length + 1}`;
+    params.push(type);
+  }
+
   try {
-    const result = await pool.query(
-      "SELECT teos_id, nimi, tekijä, julkaisuvuosi, teostyyppi, paino, divari_id FROM keskusdivari.teos"
-    );
+    // Ajetaan kysely: baseQuery + parametrit
+    const result = await pool.query(baseQuery, params);
+
+    console.log(result.rows);
     res.json(result.rows);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });

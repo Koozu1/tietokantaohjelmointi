@@ -1,1 +1,3 @@
 database/postgres/db
+.DS_Store
+.env
