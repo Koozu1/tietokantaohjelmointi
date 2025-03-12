@@ -5,7 +5,7 @@ CREATE SCHEMA keskusdivari;
 CREATE SCHEMA d1_divari;
 
 CREATE TYPE myynnin_tila AS ENUM ('vapaa', 'varattu', 'myyty');
-CREATE TYPE teostyyppi AS ENUM ('cd', 'kirja', 'lehti', 'sarjakuva', 'jne');
+CREATE TYPE teostyyppi AS ENUM ('cd', 'kirja', 'lehti', 'sarjakuva');
 
 -----------------------------------------------------------------------------------
 

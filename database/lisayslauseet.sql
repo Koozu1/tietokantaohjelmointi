@@ -6,6 +6,8 @@
 -- Jotta teos_id:t eivät menisi sekaisin eri skeemojen välillä:
 ALTER SEQUENCE keskusdivari.teos_teos_id_seq RESTART WITH 1000;
 
+-- Jotta nide_id:t eivät menisi sekaisin eri skeemojen välillä:
+ALTER SEQUENCE keskusdivari.nide_nide_id_seq RESTART WITH 1000;
 
 
 -- 1) Käyttäjä
@@ -27,15 +29,15 @@ VALUES
 INSERT INTO keskusdivari.teos
 (nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, lähde_skeema, divari_id)
 VALUES
-('Sinuhe egyptiläinen', 'Mika Waltari', '978-951-0-34696-8', 1945, 'kirja', 1.20, 'keskus', 1),
-('Tuntematon sotilas', 'Väinö Linna', '978-951-0-28088-0', 1954, 'kirja', 1.10, 'keskus', 1),
-('Hytti nro 6', 'Rosa Liksom', '978-951-31-5787-5', 2011, 'kirja', 0.95, 'keskus', 1),
-('Tiede-lehti 03/2024', 'Tiede-lehden toimitus', '978-1234-5678-90', 2024, 'lehti', 0.30, 'keskus', 1),
-('National Geographic 02/2024', 'National Geographic', '978-5678-1234-90', 2024, 'lehti', 0.35, 'keskus', 1),
-('Aku Ankka - Kulta-aika', 'Walt Disney', '978-951-32-4043-1', 2000, 'sarjakuva', 0.75, 'keskus', 1),
-('Asterix ja Obelix: Kultainen sirppi', 'René Goscinny & Albert Uderzo', '978-951-1-19193-5', 1962, 'sarjakuva', 0.80, 'keskus', 1),
-('Auschwitzin tatuoija', 'Heather Morris', '978-952-279-538-0', 2018, 'kirja', 0.95, 'keskus', 1),
-('Tummien perhosten koti', 'Leena Lander', '978-951-1-15190-8', 1991, 'kirja', 0.80, 'keskus', 1);
+('Sinuhe egyptiläinen', 'Mika Waltari', '978-951-0-34696-8', 1945, 'kirja', 1200, 'keskus', 1),
+('Tuntematon sotilas', 'Väinö Linna', '978-951-0-28088-0', 1954, 'kirja', 1100, 'keskus', 1),
+('Hytti nro 6', 'Rosa Liksom', '978-951-31-5787-5', 2011, 'kirja', 950, 'keskus', 1),
+('Tiede-lehti 03/2024', 'Tiede-lehden toimitus', '978-1234-5678-90', 2024, 'lehti', 300, 'keskus', 1),
+('National Geographic 02/2024', 'National Geographic', '978-5678-1234-90', 2024, 'lehti', 350, 'keskus', 1),
+('Aku Ankka - Kulta-aika', 'Walt Disney', '978-951-32-4043-1', 2000, 'sarjakuva', 750, 'keskus', 1),
+('Asterix ja Obelix: Kultainen sirppi', 'René Goscinny & Albert Uderzo', '978-951-1-19193-5', 1962, 'sarjakuva', 800, 'keskus', 1),
+('Auschwitzin tatuoija', 'Heather Morris', '978-952-279-538-0', 2018, 'kirja', 950, 'keskus', 1),
+('Tummien perhosten koti', 'Leena Lander', '978-951-1-15190-8', 1991, 'kirja', 800, 'keskus', 1);
 
 -- 4) Nide
 INSERT INTO keskusdivari.nide
@@ -67,12 +69,12 @@ VALUES
 INSERT INTO d1_divari.teos
 (nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, lähde_skeema, divari_id)
 VALUES
-('Puhdistus', 'Sofi Oksanen', '978-951-31-4500-2', 2008, 'kirja', 0.90, 'd1', 1),
-('Miestä ei voi raiskata', 'Märta Tikkanen', '978-951-1-26019-8', 1975, 'kirja', 0.85, 'd1', 1),
-('Auschwitzin tatuoija', 'Heather Morris', '978-952-279-538-0', 2018, 'kirja', 0.95, 'd1', 1),
-('Tummien perhosten koti', 'Leena Lander', '978-951-1-15190-8', 1991, 'kirja', 0.80, 'd1', 1),
-('Tiede-lehti 05/2024', 'Tiede-lehden toimitus', '978-1234-5678-91', 2024, 'lehti', 0.32, 'd1', 1),
-('Spider-Man: Paluu juurille', 'Stan Lee', '978-951-32-5555-3', 2002, 'sarjakuva', 0.85, 'd1', 1);
+('Puhdistus', 'Sofi Oksanen', '978-951-31-4500-2', 2008, 'kirja', 900, 'd1', 1),
+('Miestä ei voi raiskata', 'Märta Tikkanen', '978-951-1-26019-8', 1975, 'kirja', 850, 'd1', 1),
+('Auschwitzin tatuoija', 'Heather Morris', '978-952-279-538-0', 2018, 'kirja', 950, 'd1', 1),
+('Tummien perhosten koti', 'Leena Lander', '978-951-1-15190-8', 1991, 'kirja', 800, 'd1', 1),
+('Tiede-lehti 05/2024', 'Tiede-lehden toimitus', '978-1234-5678-91', 2024, 'lehti', 320, 'd1', 1),
+('Spider-Man: Paluu juurille', 'Stan Lee', '978-951-32-5555-3', 2002, 'sarjakuva', 850, 'd1', 1);
 
 -- 3) Nide
 INSERT INTO d1_divari.nide

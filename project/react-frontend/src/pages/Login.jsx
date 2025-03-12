@@ -23,6 +23,7 @@ const Login = () => {
           id: userData.id,
           name: userData.username,
           email: userData.email,
+          isAdmin: userData.isAdmin,
         },
       });
     } catch (error) {
