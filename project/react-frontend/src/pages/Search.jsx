@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
@@ -11,19 +11,33 @@ const Search = () => {
 
   const { cart, setCart, user, token } = useAppContext();
 
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get("http://localhost:5001/cart", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.data.itemIds) {
+          setCart(new Set(response.data.itemIds));
+        }
+      } catch {}
+    }
+    fetchData();
+  }, [token, setCart]);
+
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  const addToOstoskori = async (teos_id) => {
+  const addToOstoskori = async (itemId) => {
     try {
       const response = await axios.post(
         "http://localhost:5001/cart",
-        { itemId: teos_id },
+        { itemId: itemId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (response.data.count) {
-        setCart(response.data.count);
+      if (response.data.itemIds) {
+        setCart(new Set(response.data.itemIds));
       }
     } catch {}
   };
@@ -96,12 +110,23 @@ const Search = () => {
               </p>
               <p style={styles.bookDetail}>Teostyyppi: {book.teostyyppi}</p>
               <p style={styles.bookDetail}>Paino: {book.paino} g</p>
-              <button
-                style={styles.addButton}
-                onClick={() => addToOstoskori(book.teos_id)}
-              >
-                Lisää ostoskoriin
-              </button>
+              {!cart.has(book.teos_id) ? (
+                <button
+                  style={styles.addButton}
+                  onClick={() => {
+                    addToOstoskori(book.teos_id);
+                  }}
+                >
+                  Lisää ostoskoriin
+                </button>
+              ) : (
+                <button
+                  style={styles.removeButton}
+                  // onClick={removeFromOstoskori(book.teos_id)}
+                >
+                  Poista ostoskorista (TBA)
+                </button>
+              )}
             </div>
           ))
         ) : (
@@ -180,6 +205,15 @@ const styles = {
     marginTop: "10px",
     padding: "10px",
     backgroundColor: "#28a745",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  removeButton: {
+    marginTop: "10px",
+    padding: "10px",
+    backgroundColor: "#ff0000",
     color: "#fff",
     border: "none",
     borderRadius: "4px",

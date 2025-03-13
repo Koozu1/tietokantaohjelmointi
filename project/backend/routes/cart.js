@@ -8,14 +8,11 @@ import { getOrder } from "./order.js";
 const router = express.Router();
 
 router.post("/getCart", verifyToken, async (req, res) => {
-  console.log("HIT Cart add");
-  console.log(req.body.ids);
   const { teos_id } = req.body;
   try {
     const result = await pool.query(
       "SELECT teos_id, nimi, tekijä, julkaisuvuosi, teostyyppi, paino, divari_id FROM keskusdivari.teos"
     );
-    console.log(result.rows);
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -32,12 +29,11 @@ router.post("/cart", verifyToken, async (req, res) => {
       [itemId, orderId]
     );
     const countRes = await pool.query(
-      "SELECT COUNT(*) FROM keskusdivari.ostoskori WHERE tilaus_id = $1",
+      "SELECT teos_id FROM keskusdivari.ostoskori WHERE tilaus_id = $1",
       [orderId]
     );
-    const count = countRes.rows[0].count;
-    console.log("count now", count);
-    res.json({ count: count });
+    const itemIds = countRes.rows.map((item) => item.teos_id);
+    res.json({ itemIds: itemIds });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -46,17 +42,20 @@ router.post("/cart", verifyToken, async (req, res) => {
 });
 
 router.get("/cart", verifyToken, async (req, res) => {
-  const userId = req.user;
-  console.log("USER WITH ID", userId);
+  const userId = req.user.id;
 
   try {
-    const result = await pool.query(
-      "SELECT tilaus_id, myyntipäivä, divari_id, käyttäjä_id FROM keskusdivari.tilaus WHERE käyttäjä_id = $1",
-      [userId]
+    const orderId = await getOrder(userId);
+    const countRes = await pool.query(
+      "SELECT teos_id FROM keskusdivari.ostoskori WHERE tilaus_id = $1",
+      [orderId]
     );
-    res.json(result.rows[0]);
+    const itemIds = countRes.rows.map((item) => item.teos_id);
+    res.json({ itemIds: itemIds });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
+    return;
   }
 });
 
