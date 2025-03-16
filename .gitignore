@@ -1,1 +1,4 @@
 database/postgres/db
+.DS_Store
+.env
+project/backend/.env

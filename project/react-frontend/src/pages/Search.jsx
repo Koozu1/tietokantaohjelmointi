@@ -83,7 +83,7 @@ const Search = () => {
 
       {/* Hakukenttä kirjan nimelle */}
       <div>
-        <label>Kirjan nimi: </label>
+        <label>Teoksen nimi: </label>
         <input
           type="text"
           value={title}
@@ -103,7 +103,7 @@ const Search = () => {
         />
       </div>
 
-      <button onClick={handleSearch}>Search</button>
+      <button onClick={handleSearch}>Etsi</button>
       <div>
       
         {books.length > 0 ? (
@@ -118,6 +118,7 @@ const Search = () => {
                 <p>Julkaisuvuosi: {book.julkaisuvuosi}</p>
                 <p>Teostyyppi: {book.teostyyppi}</p>
                 <p>Paino: {book.paino} g</p>
+                <p>Hinta: {book.hinta} g</p>
                 <br></br>
                 <button
                   onClick={() => {
