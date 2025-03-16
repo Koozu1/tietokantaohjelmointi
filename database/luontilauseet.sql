@@ -1,8 +1,11 @@
 --Ryhmä 12: Noora Ahonen, Niina Nevala, Onni Pylvänen
 
 
-CREATE SCHEMA Keskusdivari;
-CREATE SCHEMA D1_divari;
+CREATE SCHEMA keskusdivari;
+CREATE SCHEMA d1_divari;
+
+CREATE TYPE myynnin_tila AS ENUM ('vapaa', 'varattu', 'myyty');
+CREATE TYPE teostyyppi AS ENUM ('cd', 'kirja', 'lehti', 'sarjakuva');
 
 -----------------------------------------------------------------------------------
 
@@ -10,7 +13,7 @@ CREATE SCHEMA D1_divari;
 
 
 -- Käyttäjärekisteri
-CREATE TABLE Keskusdivari.Käyttäjä (
+CREATE TABLE keskusdivari.käyttäjä (
     käyttäjä_id SERIAL PRIMARY KEY,
     nimi VARCHAR(50),
     osoite  VARCHAR(100),
@@ -22,75 +25,68 @@ CREATE TABLE Keskusdivari.Käyttäjä (
 
 
 -- Divari D2 taulu
-CREATE TABLE Keskusdivari.Divari_D2 ( 
+CREATE TABLE keskusdivari.divari_d2 ( 
     divari_id SERIAL PRIMARY KEY,  
     nimi VARCHAR(255) NOT NULL, 
     osoite VARCHAR(255) NOT NULL, 
     web_sivu VARCHAR(255)
 ); 
 
--- Teostyyppi
-CREATE TABLE Keskusdivari.Teostyyppi (
-    teostyyppi_id SERIAL PRIMARY KEY,
-    tyyppi_nimi VARCHAR(100) NOT NULL
-);
 
--- Yksittäinen teos
-CREATE TABLE Keskusdivari.Teos (
+-- Abstrakti luokka Teos D2
+CREATE TABLE keskusdivari.teos (
     teos_id SERIAL PRIMARY KEY,
     nimi VARCHAR(255) NOT NULL,
-    isbn VARCHAR(20) NOT NULL,
-    hinta DECIMAL(10, 2) NOT NULL,
-    sisäänostohinta DECIMAL(10, 2) NOT NULL,
-    paino DECIMAL(10, 2) NOT NULL,
-    teostyyppi_id INT,
-    FOREIGN KEY (teostyyppi_id) REFERENCES Keskusdivari.Teostyyppi(teostyyppi_id)
+    tekijä VARCHAR(255) NOT NULL,
+    isbn VARCHAR(50) NOT NULL,
+    julkaisuvuosi INT NOT NULL,
+    teostyyppi teostyyppi NOT NULL,
+    paino INT NOT NULL,
+    lähde_skeema VARCHAR(20), --Tälle aina oletuksena 'keskus'
+    divari_id INT,
+    FOREIGN KEY (divari_id) REFERENCES keskusdivari.divari_d2(divari_id)
 );
 
 
+-- Yksittäinen fyysinen teos (nide) D2
+CREATE TABLE keskusdivari.nide (
+    nide_id SERIAL PRIMARY KEY,
+    hinta DECIMAL(10,2),
+    sisäänostohinta DECIMAL(10,2),
+    lähde_skeema VARCHAR(20), --Tälle aina oletuksena 'keskus'
+    tila myynnin_tila, -- pakotettu vaihtoehdot ENUM tyypillä(vapaa, varattu, myyty)
+    teos_id INT,
+	FOREIGN KEY (teos_id) REFERENCES keskusdivari.teos(teos_id)
+);
 
-
--- Tilaus D2 divarille
-CREATE TABLE Keskusdivari.Tilaus (
+-- Tilaus D1 ja D2 divarille
+CREATE TABLE keskusdivari.tilaus (
     tilaus_id SERIAL PRIMARY KEY,
-    kokonaispaino INT,
-    postikulut DECIMAL(10, 2),
-    kokonaishinta DECIMAL(10, 2),
     myyntipäivämäärä DATE,
     divari_id INT,
 	käyttäjä_id INT,
-    FOREIGN KEY (divari_id) REFERENCES Keskusdivari.Divari_D2(divari_id),
-    FOREIGN KEY (käyttäjä_id) REFERENCES Keskusdivari.Käyttäjä(käyttäjä_id)
+    FOREIGN KEY (divari_id) REFERENCES keskusdivari.divari_d2(divari_id),
+    FOREIGN KEY (käyttäjä_id) REFERENCES keskusdivari.käyttäjä(käyttäjä_id)
 );
 
--- D2 Ostoskori, jossa tuotteet
-CREATE TABLE Keskusdivari.Ostoskori ( 
+-- Ostoskori
+CREATE TABLE keskusdivari.ostoskori ( 
     teos_id INT,  
     tilaus_id INT,
-	PRIMARY KEY (teos_id, tilaus_id),
-    FOREIGN KEY (teos_id) REFERENCES Keskusdivari.Teos(teos_id),
-    FOREIGN KEY (tilaus_id) REFERENCES Keskusdivari.Tilaus(tilaus_id)
+    nide_id INT,
+	PRIMARY KEY (teos_id, tilaus_id, nide_id),
+    FOREIGN KEY (teos_id) REFERENCES keskusdivari.teos(teos_id),
+    FOREIGN KEY (tilaus_id) REFERENCES keskusdivari.tilaus(tilaus_id),
+    FOREIGN KEY (nide_id) REFERENCES keskusdivari.nide(nide_id)
 ); 
 
-
-
--- Kopio taulusta D1_divari.Teos
-CREATE TABLE Keskusdivari.Teos_D1 (
-    teos_id INT PRIMARY KEY,
-    nimi VARCHAR(255) NOT NULL,
-    isbn VARCHAR(20) NOT NULL,
-    hinta DECIMAL(10, 2) NOT NULL,
-    sisäänostohinta DECIMAL(10, 2) NOT NULL,
-    paino DECIMAL(10, 2),
-    teostyyppi_id INT
-);
-
-
--- Kopio taulusta D1_divari.Teostyyppi
-CREATE TABLE Keskusdivari.Teostyyppi_D1 (
-    teostyyppi_id INT PRIMARY KEY,
-    tyyppi_nimi VARCHAR(100) NOT NULL
-);
+-- Lähetys
+CREATE TABLE keskusdivari.lähetys ( 
+    lähetys_id SERIAL PRIMARY KEY,  
+    lähetyksen_paino INT,
+    tilaus_id INT,
+    FOREIGN KEY (tilaus_id) REFERENCES keskusdivari.tilaus(tilaus_id)
+); 
 
 
 
@@ -101,50 +97,36 @@ CREATE TABLE Keskusdivari.Teostyyppi_D1 (
 
 
 -- Divari D1 taulu
-CREATE TABLE D1_divari.Divari_D1 ( 
+CREATE TABLE d1_divari.divari_d1 ( 
     divari_id SERIAL PRIMARY KEY, 
     nimi VARCHAR(255) NOT NULL, 
-    osoite VARCHAR(255) NOT NULL, 
-    web_sivu VARCHAR(255)
+    osoite VARCHAR(255) NOT NULL,
+    web_sivu VARCHAR(255) NOT NULL
 ); 
 
--- D1 Teostyypit
-CREATE TABLE D1_divari.Teostyyppi (
-    teostyyppi_id SERIAL PRIMARY KEY,
-    tyyppi_nimi VARCHAR(100) NOT NULL
-);
 
--- D1 Yksittäinen teos
-CREATE TABLE D1_divari.Teos (
+-- Abstrakti luokka Teos D1
+CREATE TABLE d1_divari.teos (
     teos_id SERIAL PRIMARY KEY,
     nimi VARCHAR(255) NOT NULL,
-    isbn VARCHAR(20) NOT NULL,
-    hinta DECIMAL(10, 2) NOT NULL,
-    sisäänostohinta DECIMAL(10, 2) NOT NULL,
-    paino DECIMAL(10, 2) NOT NULL,
-    teostyyppi_id INT,
-    FOREIGN KEY (teostyyppi_id) REFERENCES D1_divari.Teostyyppi(teostyyppi_id)
-);
-
--- Tilaus D1 divarille
-CREATE TABLE D1_divari.Tilaus (
-    tilaus_id SERIAL PRIMARY KEY,
-    kokonaispaino INT,
-    postikulut DECIMAL(10, 2),
-    kokonaishinta DECIMAL(10, 2),
-    myyntipäivämäärä DATE,
+    tekijä VARCHAR(255) NOT NULL,
+    isbn VARCHAR(50) NOT NULL,
+    julkaisuvuosi INT NOT NULL,
+    teostyyppi teostyyppi NOT NULL,
+    paino INT NOT NULL,
+    lähde_skeema VARCHAR(20), --Tälle aina oletuksena 'd1'
     divari_id INT,
-    käyttäjä_id INT,
-    FOREIGN KEY (divari_id) REFERENCES D1_divari.Divari_D1(divari_id),
-	FOREIGN KEY (käyttäjä_id) REFERENCES Keskusdivari.Käyttäjä(käyttäjä_id)
+    FOREIGN KEY (divari_id) REFERENCES d1_divari.divari_d1(divari_id)
 );
 
 
--- D1 Ostoskori, jossa tuotteet
-CREATE TABLE D1_divari.Ostoskori ( 
-    teos_id INT,  
-    tilaus_id INT,
-	PRIMARY KEY (teos_id, tilaus_id),
-    FOREIGN KEY (teos_id) REFERENCES D1_divari.Teos(teos_id),
-    FOREIGN KEY (tilaus_id) REFERENCES D1_divari.Tilaus(tilaus_id)
-); 
+-- Yksittäinen fyysinen teos (nide) D1
+CREATE TABLE d1_divari.nide (
+    nide_id SERIAL PRIMARY KEY,
+    hinta DECIMAL(10,2),
+    sisäänostohinta DECIMAL(10,2),
+    lähde_skeema VARCHAR(20), --Tälle aina oletuksena 'd1'
+    tila myynnin_tila,
+    teos_id INT,
+	FOREIGN KEY (teos_id) REFERENCES d1_divari.teos(teos_id)
+);

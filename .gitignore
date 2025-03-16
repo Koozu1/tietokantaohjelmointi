@@ -1,4 +1,8 @@
 database/postgres/db
 .DS_Store
+<<<<<<< HEAD
 .env
 project/backend/.env
+=======
+.env
+>>>>>>> origin/main

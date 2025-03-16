@@ -16,18 +16,25 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
 
     const user = result.rows[0];
-    console.log(result);
-    console.log("Comparing ", password, "to", user.salasana);
     const isMatch = await bcrypt.compare(password, user.salasana);
-    console.log("ONKO MATCH? ", isMatch);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user.id, isAdmin: user.pääkäyttäjä },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "30d",
+      }
+    );
+    console.log("USERDATA", user);
     res.json({
       token,
-      user: { id: user.id, username: user.username, email: user.email },
+      user: {
+        id: user.käyttäjä_id,
+        username: user.nimi,
+        email: user.email,
+        isAdmin: user.pääkäyttäjä,
+      },
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
