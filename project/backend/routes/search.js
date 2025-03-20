@@ -7,10 +7,10 @@ import { verifyToken } from "../verifyToken.js";
 const router = express.Router();
 
 router.get("/search", verifyToken, async (req, res) => {
-  const { author, title, type } = req.query;
+  const { author, title, type, genre } = req.query;
 
   let baseQuery = `
-  SELECT t.*, n.*
+  SELECT t.*, n.hinta
   FROM Keskusdivari.Teos t
   JOIN Keskusdivari.Nide n ON t.teos_id = n.teos_id
   WHERE n.tila = 'vapaa'
@@ -35,6 +35,12 @@ router.get("/search", verifyToken, async (req, res) => {
   if (type) {
     baseQuery += ` AND t.teostyyppi = $${params.length + 1}`;
     params.push(type);
+  }
+
+  // Jos käyttäjä antoi genre-hakusanan, lisätään ehto
+  if (genre) {
+    baseQuery += ` AND t.teosluokka = $${params.length + 1}`;
+    params.push(genre);
   }
 
   try {

@@ -7,6 +7,7 @@ const Search = () => {
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
+  const [genre, setGenre] = useState("");
   const [books, setBooks] = useState([]);
 
   const { cart, setCart, user, token } = useAppContext();
@@ -64,7 +65,7 @@ const Search = () => {
   const handleSearch = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5001/search?author=${author}&title=${title}&type=${type}`,
+        `http://localhost:5001/search?author=${author}&title=${title}&type=${type}&genre=${genre}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       console.log("Got response of", response.data);
@@ -92,7 +93,7 @@ const Search = () => {
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Kirjan nimi:</label>
+        <label style={styles.label}>Teoksen nimi:</label>
         <input
           type="text"
           value={title}
@@ -108,13 +109,24 @@ const Search = () => {
           type="text"
           value={type}
           onChange={(e) => setType(e.target.value)}
-          placeholder="Esim. romaani, dekkari..."
+          placeholder="Esim. kirja, sarjakuva..."
+          style={styles.input}
+        />
+      </div>
+
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Teosluokka:</label>
+        <input
+          type="text"
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          placeholder="Esim. romantiikka, seikkailu..."
           style={styles.input}
         />
       </div>
 
       <button style={styles.searchButton} onClick={handleSearch}>
-        Search
+        Etsi
       </button>
 
       <div style={styles.resultsContainer}>
@@ -130,6 +142,7 @@ const Search = () => {
               </p>
               <p style={styles.bookDetail}>Teostyyppi: {book.teostyyppi}</p>
               <p style={styles.bookDetail}>Paino: {book.paino} g</p>
+              <p style={styles.bookDetail}>Hinta: {book.hinta} €</p>
               {!cart.has(book.nide_id) ? (
                 <button
                   style={styles.addButton}
