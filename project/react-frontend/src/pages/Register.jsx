@@ -28,30 +28,35 @@ const Register = () => {
   }
 
   return (
-    <form onSubmit={handleRegister}>
-      <h2>Register</h2>
+    <form onSubmit={handleRegister} className="max-w-[800px] mx-auto p-4 space-y-4">
+      <h2 className="text-2xl font-semibold">Luo käyttäjätunnus ja salasana</h2>
       <input
         type="text"
-        placeholder="Username"
+        placeholder="Käyttäjätunnus"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         required
+        className="w-full p-2 border border-gray-300 rounded-md"
       />
       <input
         type="email"
-        placeholder="Email"
+        placeholder="Sähköposti"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        className="w-full p-2 border border-gray-300 rounded-md"
       />
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Salasana"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        className="w-full p-2 border border-gray-300 rounded-md"
       />
-      <button type="submit">Register</button>
+      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+        Rekisteröidy
+      </button>
     </form>
   );
 };
