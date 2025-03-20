@@ -68,7 +68,6 @@ const Search = () => {
         `http://localhost:5001/search?author=${author}&title=${title}&type=${type}&genre=${genre}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log("Got response of", response.data);
       setBooks(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);

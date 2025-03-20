@@ -8,7 +8,6 @@ import { getOrder } from "./order.js";
 const router = express.Router();
 
 router.get("/getCart", verifyToken, async (req, res) => {
-  console.log("got request to /getCart");
   const { userId } = req.query;
   const orderId = await getOrder(userId);
 
@@ -22,7 +21,6 @@ router.get("/getCart", verifyToken, async (req, res) => {
 
   try {
     const result = await pool.query(baseQuery, [orderId]);
-    console.log(result);
     const structuredData = result.rows.map((row) => ({
       id: row.nide_id,
       price: row.hinta,
@@ -68,7 +66,7 @@ router.get("/cart", verifyToken, async (req, res) => {
       "SELECT nide_id FROM keskusdivari.ostoskori WHERE tilaus_id = $1",
       [orderId]
     );
-    const itemIds = countRes.rows.map((item) => item.teos_id);
+    const itemIds = countRes.rows.map((item) => item.nide_id);
     res.json({ itemIds: itemIds });
   } catch (error) {
     console.log(error);
