@@ -10,7 +10,7 @@ router.get("/search", verifyToken, async (req, res) => {
   const { author, title, type } = req.query;
 
   let baseQuery = `
-  SELECT t.*
+  SELECT t.*, n.*
   FROM Keskusdivari.Teos t
   JOIN Keskusdivari.Nide n ON t.teos_id = n.teos_id
   WHERE n.tila = 'vapaa'

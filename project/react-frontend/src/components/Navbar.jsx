@@ -20,7 +20,7 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center space-x-4">
-        <Link to="/cart">Ostoskori ({cart.size})</Link>
+        <Link to="/order">Ostoskori ({cart.size})</Link>
         {user ? (
           <>
             <span>Tervetuloa, {user.name}</span>

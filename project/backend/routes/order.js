@@ -4,15 +4,23 @@ import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
+//for reserving
 router.post("/order", verifyToken, async (req, res) => {
-  const { teos_id } = req.body;
+  const { order_id } = req.body;
+  const client = await pool.connect();
   try {
-    const result = await pool.query(
-      "SELECT teos_id, nimi, tekijä, julkaisuvuosi, teostyyppi, paino, divari_id FROM keskusdivari.teos"
-    );
-    res.json(result.rows);
+    await client.query("BEGIN");
+    const baseQuery = `
+    
+    `;
+    await client.query("");
+
+    await client.query("COMMIT");
   } catch (error) {
+    await client.query("ROLLBACK");
     res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
   }
 });
 

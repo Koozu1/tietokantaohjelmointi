@@ -12,8 +12,9 @@ router.post("/login", async (req, res) => {
       "SELECT * FROM Keskusdivari.Käyttäjä WHERE email = $1",
       [email]
     );
-    if (result.rows.length === 0)
+    if (result.rows.length === 0) {
       return res.status(401).json({ error: "Invalid credentials" });
+    }
 
     const user = result.rows[0];
     const isMatch = await bcrypt.compare(password, user.salasana);

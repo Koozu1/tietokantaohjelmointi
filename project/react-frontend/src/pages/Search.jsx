@@ -29,7 +29,7 @@ const Search = () => {
     return <Navigate to="/login" />;
   }
 
-  const addToOstoskori = async (itemId) => {
+  const addToCart = async (itemId) => {
     try {
       const response = await axios.post(
         "http://localhost:5001/cart",
@@ -39,7 +39,26 @@ const Search = () => {
       if (response.data.itemIds) {
         setCart(new Set(response.data.itemIds));
       }
-    } catch {}
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const deleteFromCart = async (itemId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5001/cart?itemId=${itemId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        setCart((prevCart) => {
+          const newCart = new Set(prevCart);
+          newCart.delete(itemId);
+          return newCart;
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSearch = async () => {
@@ -48,6 +67,7 @@ const Search = () => {
         `http://localhost:5001/search?author=${author}&title=${title}&type=${type}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log("Got response of", response.data);
       setBooks(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);
@@ -110,11 +130,11 @@ const Search = () => {
               </p>
               <p style={styles.bookDetail}>Teostyyppi: {book.teostyyppi}</p>
               <p style={styles.bookDetail}>Paino: {book.paino} g</p>
-              {!cart.has(book.teos_id) ? (
+              {!cart.has(book.nide_id) ? (
                 <button
                   style={styles.addButton}
                   onClick={() => {
-                    addToOstoskori(book.teos_id);
+                    addToCart(book.nide_id);
                   }}
                 >
                   Lisää ostoskoriin
@@ -122,7 +142,9 @@ const Search = () => {
               ) : (
                 <button
                   style={styles.removeButton}
-                  // onClick={removeFromOstoskori(book.teos_id)}
+                  onClick={() => {
+                    deleteFromCart(book.nide_id);
+                  }}
                 >
                   Poista ostoskorista (TBA)
                 </button>

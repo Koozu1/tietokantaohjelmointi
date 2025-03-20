@@ -5,7 +5,7 @@ const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState(new Set());
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -13,24 +13,19 @@ export const AppProvider = ({ children }) => {
     try {
       user = JSON.parse(localStorage.getItem("user"));
     } catch {
-      console.log("LOGGING OUT2");
       logout();
     }
 
     if ((token === null) !== (user === null)) {
-      console.log("LOGGING OUT");
       logout();
     }
-    setToken(token);
     setUser(user);
-    setCart(new Set());
   }, []);
 
   const login = ({ token, userData }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    console.log("SETTING userdata in context to", userData);
     setToken(token);
     setCart(new Set());
   };
