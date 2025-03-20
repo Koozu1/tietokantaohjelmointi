@@ -1,6 +1,8 @@
 import React from "react";
 
 const Frontpage = () => {
+  //const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <div style={styles.container}>
       <div style={styles.welcomeMessage}>
@@ -10,7 +12,6 @@ const Frontpage = () => {
         – kaikki kohtuuhintaan. Tervetuloa tekemään löydöksiä.
         </p>
       </div>
-    </div>
   );
 };
 

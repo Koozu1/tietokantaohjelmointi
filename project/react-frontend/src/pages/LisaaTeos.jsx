@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Notification from "../components/Notification";
@@ -9,27 +9,16 @@ const LisaaTeos = () => {
   const [isbn, setIsbn] = useState("");
   const [julkaisuvuosi, setJulkaisuvuosi] = useState("");
   const [teostyyppi, setTeostyyppi] = useState("");
+  const [teosluokka, setTeosluokka] = useState("");
   const [paino, setPaino] = useState("");
   const [hinta, setHinta] = useState("");
-  const [divariId, setDivariId] = useState("");
   const [sisäänostohinta, setSisäänostohinta] = useState("");
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [activeTab, setActiveTab] = useState("d1");
 
-  useEffect(() => {
-    if (activeTab !== "keskusdivari") {
-      setDivariId("");
-    }
-  }, [activeTab]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newTeos = { nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, hinta, sisäänostohinta };
-    if (activeTab === "keskusdivari") {
-      newTeos.divari_id = divariId;
-    } else {
-      delete newTeos.divari_id;
-    }
+    const newTeos = { nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, teosluokka, paino, hinta, sisäänostohinta };
     const url = activeTab === "d1" ? "http://localhost:5001/lisaateos" : "http://localhost:5001/lisaateoskeskusdivari";
 
     try {
@@ -42,10 +31,10 @@ const LisaaTeos = () => {
         setIsbn("");
         setJulkaisuvuosi("");
         setTeostyyppi("");
+        setTeosluokka("");
         setPaino("");
         setHinta("");
         setSisäänostohinta("");
-        setDivariId("");
       } else {
         setNotification({ message: "Virhe lisättäessä teosta.", type: "error" });
       }
@@ -75,18 +64,6 @@ const LisaaTeos = () => {
         </button>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {activeTab === "keskusdivari" && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Divari ID:</label>
-            <input
-              type="number"
-              value={divariId}
-              onChange={(e) => setDivariId(e.target.value)}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-        )}
         <div>
           <label className="block text-sm font-medium text-gray-700">Nimi:</label>
           <input
@@ -145,7 +122,30 @@ const LisaaTeos = () => {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Paino:</label>
+  <label className="block text-sm font-medium text-gray-700">Teosluokka:</label>
+  <select
+    value={teosluokka}
+    onChange={(e) => setTeosluokka(e.target.value)}
+    required
+    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+  >
+    <option value="">Valitse teosluokka</option>
+    <option value="romantiikka">Romantiikka</option>
+    <option value="seikkailu">Seikkailu</option>
+    <option value="toiminta">Toiminta</option>
+    <option value="draama">Draama</option>
+    <option value="sotakirjallisuus">Sotakirjallisuus</option>
+    <option value="historiallinen fiktio">Historiallinen fiktio</option>
+    <option value="realismi">Realismi</option>
+    <option value="tiede">Tiede</option>
+    <option value="luonto">Luonto</option>
+    <option value="lasten sarjakuvat">Lasten sarjakuvat</option>
+    <option value="historiallinen romaani">Historiallinen romaani</option>
+    <option value="feminismi">Feminismi</option>
+  </select>
+</div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Paino(g):</label>
           <input
             type="number"
             value={paino}
@@ -155,7 +155,7 @@ const LisaaTeos = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Hinta:</label>
+          <label className="block text-sm font-medium text-gray-700">Hinta(€):</label>
           <input
             type="number"
             step="0,00"
@@ -166,7 +166,7 @@ const LisaaTeos = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Sisäänostohinta:</label>
+          <label className="block text-sm font-medium text-gray-700">Sisäänostohinta(€):</label>
           <input
             type="number"
             step="0,00"

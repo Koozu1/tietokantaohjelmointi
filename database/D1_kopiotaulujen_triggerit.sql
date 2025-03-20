@@ -11,10 +11,10 @@ BEGIN
     IF TG_OP = 'INSERT' THEN
         -- Kun D1_divari.Teos -tauluun lisätään uusi rivi
         INSERT INTO keskusdivari.teos
-            (teos_id, nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, paino, lähde_skeema, divari_id)
+            (teos_id, nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, teosluokka, paino, lähde_skeema, divari_id)
         VALUES
             (NEW.teos_id, NEW.nimi, NEW.tekijä, NEW.isbn, NEW.julkaisuvuosi, NEW.teostyyppi,
-             NEW.paino, NEW.lähde_skeema, NEW.divari_id);
+             NEW.teosluokka, NEW.paino, NEW.lähde_skeema, NEW.divari_id);
 
         RETURN NEW;
 
@@ -26,6 +26,7 @@ BEGIN
                isbn = NEW.isbn,
                julkaisuvuosi = NEW.julkaisuvuosi,
                teostyyppi = NEW.teostyyppi,
+               teosluokka = NEW.teosluokka,
                paino = NEW.paino,
                lähde_skeema = NEW.lähdeskeema,
                divari_id = NEW.divari_id
