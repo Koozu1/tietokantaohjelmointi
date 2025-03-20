@@ -2,39 +2,15 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { pool } from "../db.js";
+import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
-const verifyToken = (req, res, next) => {
-  console.log("SEARCHING");
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.log("11111");
-    return res.status(401).json({ message: "No token provided" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    console.log("222222");
-    console.log(error);
-    return res.status(401).json({ message: "Invalid or expired token" });
-  }
-  console.log("333");
-};
-
 router.get("/search", verifyToken, async (req, res) => {
-  console.log("HIT SEARCH");
-
   const { author, title, type, genre } = req.query;
 
   let baseQuery = `
-  SELECT t.*, n.hinta
+  SELECT t.*, n.hinta, n.nide_id
   FROM Keskusdivari.Teos t
   JOIN Keskusdivari.Nide n ON t.teos_id = n.teos_id
   WHERE n.tila = 'vapaa'
@@ -63,22 +39,19 @@ router.get("/search", verifyToken, async (req, res) => {
 
   // Jos käyttäjä antoi genre-hakusanan, lisätään ehto
   if (genre) {
-      baseQuery += ` AND t.teosluokka = $${params.length + 1}`;
-      params.push(genre);
-    }
+    baseQuery += ` AND t.teosluokka = $${params.length + 1}`;
+    params.push(genre);
+  }
 
   try {
     // Ajetaan kysely: baseQuery + parametrit
     const result = await pool.query(baseQuery, params);
 
-    console.log(result.rows);
     res.json(result.rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
-
   }
 });
-
 
 export default router;

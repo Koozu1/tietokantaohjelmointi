@@ -1,67 +1,84 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-
-const addToOstoskori = async (teos_id) => {
-  console.log("Adding to shopping cart id", teos_id);
-};
+import { useAppContext } from "../context/AppContext";
 
 const Search = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [genre, setGenre] = useState("");
   const [books, setBooks] = useState([]);
-  const token = localStorage.getItem("token");
+
+  const { cart, setCart, user, token } = useAppContext();
 
   useEffect(() => {
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
+    async function fetchData() {
+      try {
+        const response = await axios.get("http://localhost:5001/cart", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.data.itemIds) {
+          setCart(new Set(response.data.itemIds));
+        }
+      } catch {}
     }
-  }, [token]);
+    fetchData();
+  }, [token, setCart]);
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  const addToCart = async (itemId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/cart",
+        { itemId: itemId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.itemIds) {
+        setCart(new Set(response.data.itemIds));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const deleteFromCart = async (itemId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5001/cart?itemId=${itemId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        setCart((prevCart) => {
+          const newCart = new Set(prevCart);
+          newCart.delete(itemId);
+          return newCart;
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSearch = async () => {
-    if (!author.trim() && !title.trim() && !type.trim() && !genre.trim()) return;
     try {
       const response = await axios.get(
         `http://localhost:5001/search?author=${author}&title=${title}&type=${type}&genre=${genre}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      if (response.data.length === 0) {
-        setAuthor("");
-        setTitle("");
-        setType("");
-        setGenre("");
-        setBooks([]);
-        alert("Hakutuloksia ei löytynyt annetuilla kriteereillä.");
-      } else {
-        setBooks(response.data);
-      }
+      setBooks(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);
-      setAuthor("");
-      setTitle("");
-      setType("");
-      setGenre("");
       setBooks([]);
-      alert("Hakutuloksia ei löytynyt annetuilla kriteereillä.");
     }
   };
-
-  if (isAuthenticated === false) {
-    return <Navigate to="/login" />;
-  }
 
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Haku</h1>
-      <p style={styles.description}>
-        Hae kirjoja eri hakukriteereillä
-      </p>
+      <p style={styles.description}>Hae kirjoja eri hakukriteereillä</p>
 
       <div style={styles.formGroup}>
         <label style={styles.label}>Tekijä:</label>
@@ -119,17 +136,31 @@ const Search = () => {
                 {index + 1}: {book.nimi}
               </h3>
               <p style={styles.bookDetail}>Tekijä: {book.tekijä}</p>
-              <p style={styles.bookDetail}>Julkaisuvuosi: {book.julkaisuvuosi}</p>
+              <p style={styles.bookDetail}>
+                Julkaisuvuosi: {book.julkaisuvuosi}
+              </p>
               <p style={styles.bookDetail}>Teostyyppi: {book.teostyyppi}</p>
               <p style={styles.bookDetail}>Paino: {book.paino} g</p>
               <p style={styles.bookDetail}>Hinta: {book.hinta} €</p>
-
-              <button
-                style={styles.addButton}
-                onClick={() => addToOstoskori(book.teos_id)}
-              >
-                Lisää ostoskoriin
-              </button>
+              {!cart.has(book.nide_id) ? (
+                <button
+                  style={styles.addButton}
+                  onClick={() => {
+                    addToCart(book.nide_id);
+                  }}
+                >
+                  Lisää ostoskoriin
+                </button>
+              ) : (
+                <button
+                  style={styles.removeButton}
+                  onClick={() => {
+                    deleteFromCart(book.nide_id);
+                  }}
+                >
+                  Poista ostoskorista (TBA)
+                </button>
+              )}
             </div>
           ))
         ) : (
@@ -208,6 +239,15 @@ const styles = {
     marginTop: "10px",
     padding: "10px",
     backgroundColor: "#28a745",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  removeButton: {
+    marginTop: "10px",
+    padding: "10px",
+    backgroundColor: "#ff0000",
     color: "#fff",
     border: "none",
     borderRadius: "4px",

@@ -12,21 +12,21 @@ router.post("/login", async (req, res) => {
       "SELECT * FROM Keskusdivari.Käyttäjä WHERE email = $1",
       [email]
     );
-    if (result.rows.length === 0)
+    if (result.rows.length === 0) {
       return res.status(401).json({ error: "Invalid credentials" });
+    }
 
     const user = result.rows[0];
     const isMatch = await bcrypt.compare(password, user.salasana);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
     const token = jwt.sign(
-      { id: user.id, isAdmin: user.pääkäyttäjä },
+      { id: user.käyttäjä_id, isAdmin: user.pääkäyttäjä },
       process.env.JWT_SECRET,
       {
         expiresIn: "30d",
       }
     );
-    console.log("USERDATA", user);
     res.json({
       token,
       user: {

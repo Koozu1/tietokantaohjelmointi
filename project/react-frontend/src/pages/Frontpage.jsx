@@ -8,10 +8,12 @@ const Frontpage = () => {
       <div style={styles.welcomeMessage}>
         <h2 style={styles.heading}>Tervetuloa Kirjakeitaaseen!</h2>
         <p style={styles.description}>
-        Hyvin säilyneet kirjat ja sarjakuvat odottavat sinua! Meiltä löydät vanhat klassikot, unohtuneet helmet ja rakastetut sarjat 
-        – kaikki kohtuuhintaan. Tervetuloa tekemään löydöksiä.
+          Hyvin säilyneet kirjat ja sarjakuvat odottavat sinua! Meiltä löydät
+          vanhat klassikot, unohtuneet helmet ja rakastetut sarjat – kaikki
+          kohtuuhintaan. Tervetuloa tekemään löydöksiä.
         </p>
       </div>
+    </div>
   );
 };
 
@@ -42,7 +44,7 @@ const styles = {
     textAlign: "center",
     boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
     marginBottom: "1.5rem",
-  }
+  },
 };
 
 export default Frontpage;
