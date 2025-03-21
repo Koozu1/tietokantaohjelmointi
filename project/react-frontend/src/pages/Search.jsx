@@ -104,25 +104,41 @@ const Search = () => {
 
       <div style={styles.formGroup}>
         <label style={styles.label}>Teostyyppi:</label>
-        <input
-          type="text"
+        <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          placeholder="Esim. kirja, sarjakuva..."
           style={styles.input}
-        />
-      </div>
+        >
+        <option value="">Valitse teostyyppi</option>
+        <option value="cd">CD</option>
+        <option value="kirja">Kirja</option>
+        <option value="lehti">Lehti</option>
+        <option value="sarjakuva">Sarjakuva</option>
+      </select>
+    </div>
 
-      <div style={styles.formGroup}>
+    <div style={styles.formGroup}>
         <label style={styles.label}>Teosluokka:</label>
-        <input
-          type="text"
+        <select
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
-          placeholder="Esim. romantiikka, seikkailu..."
           style={styles.input}
-        />
-      </div>
+        >
+        <option value="">Valitse teosluokka</option>
+        <option value="romantiikka">Romantiikka</option>
+        <option value="seikkailu">Seikkailu</option>
+        <option value="toiminta">Toiminta</option>
+        <option value="draama">Draama</option>
+        <option value="sotakirjallisuus">Sotakirjallisuus</option>
+        <option value="historiallinen fiktio">Historiallinen fiktio</option>
+        <option value="realismi">Realismi</option>
+        <option value="tiede">Tiede</option>
+        <option value="luonto">Luonto</option>
+        <option value="lasten sarjakuvat">Lasten sarjakuvat</option>
+        <option value="historiallinen romaani">Historiallinen romaani</option>
+        <option value="feminismi">Feminismi</option>
+      </select>
+    </div>
 
       <button style={styles.searchButton} onClick={handleSearch}>
         Etsi
@@ -204,6 +220,7 @@ const styles = {
     padding: "10px",
     borderRadius: "4px",
     border: "1px solid #ccc",
+    backgroundColor: "#fff",
   },
   searchButton: {
     display: "block",

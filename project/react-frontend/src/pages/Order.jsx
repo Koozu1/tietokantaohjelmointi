@@ -59,32 +59,30 @@ const Order = () => {
   };
 
   return (
-    <>
-      <div class="bg-gray-100 min-h-screen flex items-center justify-center">
-        <div class="w-full max-w-6xl mx-auto grid grid-cols-3 gap-4 p-4">
-          <div class="col-span-2 bg-white shadow rounded-lg p-4">
-            <h2 class="text-2xl font-bold mb-4">Ostoskori</h2>
+  <div class="bg-white min-h-screen flex items-start justify-cente p-4 space-y-4">
+    <div class="max-w-[800px] w-full mx-auto p-4 space-y-4 bg-[#f9f9f9] shadow-md rounded-lg">
+      <div class="bg-white shadow rounded-lg p-4 bg-[#f9f9f9]">
+        <h2 class="text-2xl font-bold mb-4">Ostoskori</h2>
 
-            {getCart()}
+        {getCart()}
 
-            <div class="mt-4 text-right">
-              <p class="text-xl font-semibold">
-                Total: $123456.00 Tää täytyy vielä laskea
-              </p>
-            </div>
-          </div>
-
-          <div class="col-span-1 bg-white shadow rounded-lg p-4 flex flex-col justify-center space-y-4">
-            <button
-              //onClick={handleClick}
-              class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-            >
-              Tee tilaus
-            </button>
-          </div>
+        <div class="mt-4 text-right">
+          <p class="text-xl font-semibold">
+            Total: $123456.00 Tää täytyy vielä laskea
+          </p>
+        </div>
+        <div class="mt-4">
+          <button
+            //onClick={handleClick}
+            class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          >
+            Tee tilaus
+          </button>
         </div>
       </div>
-    </>
+    </div>
+  </div>
+
   );
 };
 
