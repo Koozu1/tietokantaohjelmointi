@@ -18,9 +18,11 @@ const Navbar = () => {
         <Link to="/search" className="mr-4">
           Haku
         </Link>
+        {user?.isAdmin && (
         <Link to="/additem" className="mr-4">
           Lisää teos
         </Link>
+        )}
       </div>
 
       <div className="flex items-center space-x-4">
