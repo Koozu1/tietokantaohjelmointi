@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Notification from "../components/Notification";
 
-const LisaaTeos = () => {
+const AddItem = () => {
   const [nimi, setNimi] = useState("");
   const [tekijä, setTekijä] = useState("");
   const [isbn, setIsbn] = useState("");
@@ -19,7 +19,7 @@ const LisaaTeos = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newTeos = { nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, teosluokka, paino, hinta, sisäänostohinta };
-    const url = activeTab === "d1" ? "http://localhost:5001/lisaateos" : "http://localhost:5001/lisaateoskeskusdivari";
+    const url = activeTab === "d1" ? "http://localhost:5001/additemd1" : "http://localhost:5001/additemd2";
 
     try {
       const response = await axios.post(url, newTeos);
@@ -184,4 +184,4 @@ const LisaaTeos = () => {
   );
 };
 
-export default LisaaTeos;
+export default AddItem;
