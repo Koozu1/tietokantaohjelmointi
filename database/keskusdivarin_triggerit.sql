@@ -7,29 +7,31 @@
 -- ei sitä näytetä hakutuloksissa
 
 
+
 CREATE OR REPLACE FUNCTION keskusdivari.nide_trigger_func()
 RETURNS TRIGGER AS
 $$
 BEGIN
+    IF TG_ARGV[0] = 'triggered' THEN
+        RETURN NEW;  -- Estetään looppi
+    END IF;
+
     IF TG_OP = 'UPDATE' THEN
-        -- Tarkistetaan, että vanhan rivin lähde_skeema on 'd1'
+        -- Päivitetään vain, jos lähde on D1
         IF OLD.lähde_skeema = 'd1' THEN
-            -- Päivitetään d1_divari.nide -rivi vain, jos se on D1:n kopio
             UPDATE d1_divari.nide
             SET tila = NEW.tila
             WHERE nide_id = OLD.nide_id;
-        END IF; -- Suljetaan sisempi IF-lause
-    END IF; -- Suljetaan ulompi IF-lause
+        END IF;
+    END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 
-
-
 CREATE TRIGGER nide_trigger
 AFTER UPDATE
 ON keskusdivari.nide
 FOR EACH ROW
-EXECUTE PROCEDURE keskusdivari.nide_trigger_func();
+EXECUTE FUNCTION keskusdivari.nide_trigger_func('triggered');  -- Annetaan flagiksi 'triggered'

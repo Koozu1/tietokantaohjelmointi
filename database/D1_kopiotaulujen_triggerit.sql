@@ -63,8 +63,11 @@ CREATE OR REPLACE FUNCTION d1_divari.nide_copy_trigger_func()
 RETURNS TRIGGER AS
 $$
 BEGIN
+    IF TG_ARGV[0] = 'triggered' THEN
+        RETURN NEW;  -- Estetään rekursiivinen päivitys
+    END IF;
+
     IF TG_OP = 'INSERT' THEN
-        -- Kun D1_divari.Nide -tauluun lisätään uusi rivi
         INSERT INTO keskusdivari.nide
             (nide_id, hinta, sisäänostohinta, lähde_skeema, tila, teos_id)
         VALUES
@@ -73,21 +76,18 @@ BEGIN
         RETURN NEW;
 
     ELSIF TG_OP = 'UPDATE' THEN
-        -- Kun D1_divari.Nide -rivin tietoja päivitetään
         UPDATE keskusdivari.nide
-           SET hinta = NEW.hinta,
-           	   sisäänostohinta = NEW.sisäänostohinta,
-           	   lähde_skeema = NEW.lähde_skeema,
-           	   tila = NEW.tila,
-           	   teos_id = NEW.teos_id
-         WHERE nide_id = OLD.nide_id;
+        SET hinta = NEW.hinta,
+            sisäänostohinta = NEW.sisäänostohinta,
+            tila = NEW.tila,
+            teos_id = NEW.teos_id
+        WHERE nide_id = OLD.nide_id;
 
         RETURN NEW;
         
     ELSIF TG_OP = 'DELETE' THEN
-        -- Kun D1_divari.nide -rivi poistetaan
-         DELETE FROM keskusdivari.nide
-         WHERE nide_id = OLD.nide_id;
+        DELETE FROM keskusdivari.nide
+        WHERE nide_id = OLD.nide_id;
 
         RETURN OLD;
         
@@ -98,9 +98,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
 CREATE TRIGGER nide_copy_trigger
 AFTER INSERT OR UPDATE
 ON d1_divari.nide
 FOR EACH ROW
-EXECUTE PROCEDURE d1_divari.nide_copy_trigger_func();
+EXECUTE FUNCTION d1_divari.nide_copy_trigger_func('triggered');  -- Annetaan flagiksi 'triggered'
+
