@@ -5,6 +5,7 @@ CREATE SCHEMA keskusdivari;
 CREATE SCHEMA d1_divari;
 
 CREATE TYPE myynnin_tila AS ENUM ('vapaa', 'varattu', 'myyty');
+CREATE TYPE tilauksen_tila AS ENUM ('kesken', 'suoritettu', 'keskeytetty');
 CREATE TYPE teostyyppi AS ENUM ('cd', 'kirja', 'lehti', 'sarjakuva');
 CREATE TYPE teosluokka AS ENUM ('romantiikka', 'seikkailu', 'toiminta', 'draama', 'sotakirjallisuus', 'historiallinen fiktio', 'realismi', 'tiede', 'luonto', 'lasten sarjakuvat', 'historiallinen romaani', 'feminismi');
 
@@ -64,9 +65,9 @@ CREATE TABLE keskusdivari.nide (
 -- Tilaus D1 ja D2 divarille
 CREATE TABLE keskusdivari.tilaus (
     tilaus_id SERIAL PRIMARY KEY,
-    myyntipäivämäärä DATE,
     divari_id INT,
 	käyttäjä_id INT,
+    tila tilauksen_tila,
     FOREIGN KEY (divari_id) REFERENCES keskusdivari.divari_d2(divari_id),
     FOREIGN KEY (käyttäjä_id) REFERENCES keskusdivari.käyttäjä(käyttäjä_id)
 );
@@ -84,6 +85,7 @@ CREATE TABLE keskusdivari.ostoskori (
 CREATE TABLE keskusdivari.lähetys ( 
     lähetys_id SERIAL PRIMARY KEY,  
     lähetyksen_paino INT,
+    hinta_yht DECIMAL(10,2),
     tilaus_id INT,
     FOREIGN KEY (tilaus_id) REFERENCES keskusdivari.tilaus(tilaus_id)
 ); 

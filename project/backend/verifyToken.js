@@ -5,6 +5,7 @@ export const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.log("No token provided");
     return res.status(401).json({ message: "No token provided" });
   }
 
@@ -15,6 +16,7 @@ export const verifyToken = async (req, res, next) => {
     req.user = decoded;
     const isValidUser = await validateUser(decoded.id);
     if (!isValidUser) {
+      console.log("invalid user");
       return res.status(401).json({ message: "Invalid or expired token" });
     }
     next();

@@ -13,7 +13,7 @@ $$
 BEGIN
     IF TG_OP = 'UPDATE' THEN
         -- Tarkistetaan, että vanhan rivin lähde_skeema on 'd1'
-        IF OLD.lähde_skeema = 'd1' THEN
+        IF OLD.lähde_skeema = 'd1' AND OLD.tila IS DISTINCT FROM NEW.tila THEN
             -- Päivitetään d1_divari.nide -rivi vain, jos se on D1:n kopio
             UPDATE d1_divari.nide
             SET tila = NEW.tila

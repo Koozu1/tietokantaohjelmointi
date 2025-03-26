@@ -7,6 +7,7 @@ const Order = () => {
   const [books, setBooks] = useState([]);
   const [confirm, setConfirm] = useState(false);
   const [order, setOrder] = useState(null);
+  const [orderStatus, setOrderStatus] = useState("open");
 
   const { user, cart, setCart, token } = useAppContext();
 
@@ -43,18 +44,75 @@ const Order = () => {
     });
   };
 
-  const handleClick = async () => {
+  const handleReserve = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/cart`, {
-        ids: { ids },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setBooks(response.data);
-      console.log(books);
-      results = response.data.books;
+      const response = await axios.post(
+        `http://localhost:5001/order/reserve`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        setOrderStatus("reserved");
+        console.log("GOT SUCCESS!");
+      }
     } catch (error) {
+      if (error.response.status === 409) {
+        alert(
+          "Poistettiin osa tuotteista ostoskorista sillä ne eivät olleet enää saatavilla"
+        );
+      }
       console.error("Error fetching books:", error);
       return null;
+    }
+  };
+
+  const handleConfirm = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5001/order/confirm`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        setOrderStatus("completed");
+        console.log("Order completed");
+      }
+    } catch (error) {}
+  };
+
+  const getButton = () => {
+    switch (orderStatus) {
+      case "reserved": {
+        return (
+          <>
+            <button
+              onClick={handleConfirm}
+              class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+            >
+              Vahvista tilaus
+            </button>
+            <button
+              //onClick={}
+              class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
+            >
+              Peruuta tilaus
+            </button>
+          </>
+        );
+      }
+      case "completed": {
+        return <p>Sigma</p>;
+      }
+      default: {
+        return (
+          <button
+            onClick={handleReserve}
+            class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          >
+            Tee tilaus
+          </button>
+        );
+      }
     }
   };
 
@@ -75,12 +133,7 @@ const Order = () => {
           </div>
 
           <div class="col-span-1 bg-white shadow rounded-lg p-4 flex flex-col justify-center space-y-4">
-            <button
-              //onClick={handleClick}
-              class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-            >
-              Tee tilaus
-            </button>
+            {getButton()}
           </div>
         </div>
       </div>

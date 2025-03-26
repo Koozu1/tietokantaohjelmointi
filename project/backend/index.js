@@ -7,6 +7,7 @@ import lisaateos from "./routes/lisaateos.js";
 import lisaateoskeskusdivari from "./routes/lisaateoskeskusdivari.js";
 import search from "./routes/search.js";
 import cart from "./routes/cart.js";
+import order from "./routes/order.js";
 import { connect } from "./db.js";
 
 dotenv.config();
@@ -22,5 +23,6 @@ app.use(lisaateos);
 app.use(lisaateoskeskusdivari);
 app.use(search);
 app.use(cart);
+app.use(order);
 
 app.listen(5001, () => console.log(`Server running on port 5001`));
