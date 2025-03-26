@@ -7,9 +7,22 @@ const Order = () => {
   const [books, setBooks] = useState([]);
   const [confirm, setConfirm] = useState(false);
   const [order, setOrder] = useState(null);
+  const [weight, setWeight] = useState(null);
+  const [price, setPrice] = useState(null);
   const [orderStatus, setOrderStatus] = useState("open");
 
   const { user, cart, setCart, token } = useAppContext();
+
+  const refreshData = async () => {
+    const results = await axios.get(
+      `http://localhost:5001/getCart?userId=${user.id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    setOrder(results.data.cartItems);
+    setWeight(results.data.weight);
+    setPrice(results.data.totalPrice);
+    console.log("got data2: ", results.data);
+  };
 
   useEffect(() => {
     async function getData() {
@@ -17,8 +30,10 @@ const Order = () => {
         `http://localhost:5001/getCart?userId=${user.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setOrder(results.data);
-      console.log("got data: ", results.data);
+      setOrder(results.data.cartItems);
+      setWeight(results.data.weight);
+      setPrice(results.data.totalPrice);
+      console.log("got data2: ", results.data);
     }
     getData();
   }, [token, user]);
@@ -60,6 +75,7 @@ const Order = () => {
         alert(
           "Poistettiin osa tuotteista ostoskorista sillä ne eivät olleet enää saatavilla"
         );
+        refreshData();
       }
       console.error("Error fetching books:", error);
       return null;
@@ -101,9 +117,12 @@ const Order = () => {
         );
       }
       case "completed": {
-        return <p>Sigma</p>;
+        return <p>asdasd tilaus done</p>;
       }
       default: {
+        if (order == null || order.length === 0) {
+          return <p>Lisää ensin kirjoja ostoskoriin</p>;
+        }
         return (
           <button
             onClick={handleReserve}
@@ -127,7 +146,11 @@ const Order = () => {
 
             <div class="mt-4 text-right">
               <p class="text-xl font-semibold">
-                Total: $123456.00 Tää täytyy vielä laskea
+                {price != null &&
+                  `Yhteenlaskettu hinta postikuluineen: ${price}€`}
+              </p>
+              <p class="text-xl font-semibold">
+                {weight != null && `Paino yhteensä: ${weight}g`}
               </p>
             </div>
           </div>

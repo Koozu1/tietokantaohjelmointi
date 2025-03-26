@@ -1,8 +1,43 @@
 import express from "express";
 import { pool } from "../db.js";
 import { verifyToken } from "../verifyToken.js";
+import { verify } from "jsonwebtoken";
 
 const router = express.Router();
+
+router.get("/getCart", verifyToken, async (req, res) => {
+  const { userId } = req.query;
+  const orderId = await getOrder(userId);
+
+  const baseQuery = `
+  SELECT n.*, t.*
+  FROM keskusdivari.ostoskori o
+  JOIN keskusdivari.nide n ON o.nide_id = n.nide_id
+  JOIN keskusdivari.teos t ON n.teos_id = t.teos_id
+  WHERE o.tilaus_id = $1
+  `;
+
+  try {
+    const result = await pool.query(baseQuery, [orderId]);
+    const structuredData = result.rows.map((row) => ({
+      id: row.nide_id,
+      price: row.hinta,
+      status: row.tila,
+      title: row.nimi,
+      author: row.tekijä,
+    }));
+    const weight = await getOrderWeight(pool, orderId);
+    const totalPrice = await getOrderPrice(pool, orderId, weight);
+    res.json({
+      cartItems: structuredData,
+      weight: weight,
+      totalPrice: totalPrice,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "error fetching data" });
+  }
+});
 
 //for reserving
 router.post("/order/reserve", verifyToken, async (req, res) => {
@@ -20,7 +55,7 @@ router.post("/order/reserve", verifyToken, async (req, res) => {
       });
       return;
     }
-    const reserved = reserveAllItems(client, orderId);
+    const reserved = await reserveAllItems(client, orderId);
 
     await client.query("COMMIT");
     res.status(200).json({ message: "Order successfully reserved" });
@@ -50,12 +85,32 @@ router.post("/order/confirm", verifyToken, async (req, res) => {
       `UPDATE keskusdivari.tilaus SET tila = 'suoritettu' WHERE tilaus_id = $1`,
       [orderId]
     );
+    await orderAllItems(client, orderId);
 
     await client.query("COMMIT");
     console.log("COMMITTED!");
     res.status(200).json({ message: "Order successfully confirmed" });
   } catch (error) {
     console.log("Error in confirm", error);
+    await client.query("ROLLBACK");
+  } finally {
+    client.release();
+  }
+});
+
+router.post("/order/cancel", verifyToken, async (req, res) => {
+  console.log("cancelling");
+  const orderId = await getOrder(req.user.id);
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    await releaseAllItems(client, orderId);
+
+    await client.query("COMMIT");
+    console.log("COMMITTED!");
+    res.status(200).json({ message: "Order successfully cancelled" });
+  } catch (error) {
+    console.log("Error in cancel", error);
     await client.query("ROLLBACK");
   } finally {
     client.release();
@@ -115,8 +170,29 @@ const reserveAllItems = async (client, orderId) => {
     SELECT nide_id FROM keskusdivari.ostoskori WHERE tilaus_id = $1
   )
   `;
-  console.log("WILL DO FOR ID", orderId);
-  const result = await client.query(baseQuery, [orderId]);
+  await client.query(baseQuery, [orderId]);
+};
+
+const orderAllItems = async (client, orderId) => {
+  const baseQuery = `
+  UPDATE keskusdivari.nide
+  SET tila = 'myyty'
+  WHERE nide_id IN (
+    SELECT nide_id FROM keskusdivari.ostoskori WHERE tilaus_id = $1
+  )
+  `;
+  await client.query(baseQuery, [orderId]);
+};
+
+const releaseAllItems = async (client, orderId) => {
+  const baseQuery = `
+  UPDATE keskusdivari.nide
+  SET tila = 'vapaa'
+  WHERE nide_id IN (
+    SELECT nide_id FROM keskusdivari.ostoskori WHERE tilaus_id = $1
+  )
+  `;
+  await client.query(baseQuery, [orderId]);
 };
 
 const getOrderWeight = async (client, orderId) => {
@@ -127,7 +203,6 @@ const getOrderWeight = async (client, orderId) => {
   JOIN keskusdivari.teos t ON n.teos_id = t.teos_id
   WHERE o.tilaus_id = $1;
   `;
-  console.log("STARTING weight query.");
   const result = await client.query(baseQuery, [orderId]);
   if (result.rowCount === 1) {
     return result.rows[0].total_weight;

@@ -7,34 +7,6 @@ import { getOrder } from "./order.js";
 
 const router = express.Router();
 
-router.get("/getCart", verifyToken, async (req, res) => {
-  const { userId } = req.query;
-  const orderId = await getOrder(userId);
-
-  const baseQuery = `
-  SELECT n.*, t.*
-  FROM keskusdivari.ostoskori o
-  JOIN keskusdivari.nide n ON o.nide_id = n.nide_id
-  JOIN keskusdivari.teos t ON n.teos_id = t.teos_id
-  WHERE o.tilaus_id = $1
-  `;
-
-  try {
-    const result = await pool.query(baseQuery, [orderId]);
-    const structuredData = result.rows.map((row) => ({
-      id: row.nide_id,
-      price: row.hinta,
-      status: row.tila,
-      title: row.nimi,
-      author: row.tekijä,
-    }));
-    res.json(structuredData);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "error fetching data" });
-  }
-});
-
 router.post("/cart", verifyToken, async (req, res) => {
   const userId = req.user.id;
   const { itemId } = req.body;
