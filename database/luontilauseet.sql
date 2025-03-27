@@ -5,7 +5,7 @@ CREATE SCHEMA keskusdivari;
 CREATE SCHEMA d1_divari;
 
 CREATE TYPE myynnin_tila AS ENUM ('vapaa', 'varattu', 'myyty');
-CREATE TYPE tilauksen_tila AS ENUM ('kesken', 'suoritettu', 'keskeytetty');
+CREATE TYPE tilauksen_tila AS ENUM ('kesken', 'varattu', 'suoritettu', 'keskeytetty');
 CREATE TYPE teostyyppi AS ENUM ('cd', 'kirja', 'lehti', 'sarjakuva');
 CREATE TYPE teosluokka AS ENUM ('romantiikka', 'seikkailu', 'toiminta', 'draama', 'sotakirjallisuus', 'historiallinen fiktio', 'realismi', 'tiede', 'luonto', 'lasten sarjakuvat', 'historiallinen romaani', 'feminismi');
 

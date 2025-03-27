@@ -1,7 +1,6 @@
 import express from "express";
 import { pool } from "../db.js";
 import { verifyToken } from "../verifyToken.js";
-import { verify } from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -27,21 +26,32 @@ router.get("/getCart", verifyToken, async (req, res) => {
       author: row.tekijä,
     }));
     const weight = await getOrderWeight(pool, orderId);
-    const totalPrice = await getOrderPrice(pool, orderId, weight);
+    const { itemPrice, shippingCost } = await getOrderPrice(
+      pool,
+      orderId,
+      weight
+    );
+
+    const queryResult = await pool.query(
+      `SELECT tila FROM keskusdivari.tilaus WHERE tilaus_id = $1`,
+      [orderId]
+    );
+    const orderStatus = queryResult.rows[0].tila;
+
     res.json({
       cartItems: structuredData,
       weight: weight,
-      totalPrice: totalPrice,
+      itemPrice: itemPrice,
+      shippingCost: shippingCost,
+      orderStatus: orderStatus,
     });
   } catch (error) {
-    console.log(error);
+    console.log("Error fetching cart", error);
     res.status(500).json({ error: "error fetching data" });
   }
 });
 
-//for reserving
 router.post("/order/reserve", verifyToken, async (req, res) => {
-  console.log("started reserve");
   const orderId = await getOrder(req.user.id);
   const client = await pool.connect();
   try {
@@ -55,7 +65,12 @@ router.post("/order/reserve", verifyToken, async (req, res) => {
       });
       return;
     }
-    const reserved = await reserveAllItems(client, orderId);
+    await reserveAllItems(client, orderId);
+
+    await client.query(
+      `UPDATE keskusdivari.tilaus SET tila = 'varattu' WHERE tilaus_id = $1`,
+      [orderId]
+    );
 
     await client.query("COMMIT");
     res.status(200).json({ message: "Order successfully reserved" });
@@ -69,17 +84,20 @@ router.post("/order/reserve", verifyToken, async (req, res) => {
 });
 
 router.post("/order/confirm", verifyToken, async (req, res) => {
-  console.log("started confirm");
   const orderId = await getOrder(req.user.id);
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
     const weight = await getOrderWeight(client, orderId);
-    const price = await getOrderPrice(client, orderId, weight);
+    const { itemPrice, shippingCost } = await getOrderPrice(
+      client,
+      orderId,
+      weight
+    );
 
     const response = await client.query(
       "INSERT INTO keskusdivari.Lähetys (lähetyksen_paino, tilaus_id, hinta_yht) values ($1, $2, $3)",
-      [weight, orderId, price]
+      [weight, orderId, itemPrice + shippingCost]
     );
     await client.query(
       `UPDATE keskusdivari.tilaus SET tila = 'suoritettu' WHERE tilaus_id = $1`,
@@ -88,7 +106,6 @@ router.post("/order/confirm", verifyToken, async (req, res) => {
     await orderAllItems(client, orderId);
 
     await client.query("COMMIT");
-    console.log("COMMITTED!");
     res.status(200).json({ message: "Order successfully confirmed" });
   } catch (error) {
     console.log("Error in confirm", error);
@@ -99,15 +116,18 @@ router.post("/order/confirm", verifyToken, async (req, res) => {
 });
 
 router.post("/order/cancel", verifyToken, async (req, res) => {
-  console.log("cancelling");
   const orderId = await getOrder(req.user.id);
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
     await releaseAllItems(client, orderId);
 
+    await client.query(
+      `UPDATE keskusdivari.tilaus SET tila = 'keskeytetty' WHERE tilaus_id = $1`,
+      [orderId]
+    );
+
     await client.query("COMMIT");
-    console.log("COMMITTED!");
     res.status(200).json({ message: "Order successfully cancelled" });
   } catch (error) {
     console.log("Error in cancel", error);
@@ -119,7 +139,7 @@ router.post("/order/cancel", verifyToken, async (req, res) => {
 
 export const getOrder = async (userId) => {
   const res = await pool.query(
-    "SELECT tilaus_id FROM keskusdivari.Tilaus WHERE käyttäjä_id = $1 AND tila = 'kesken'",
+    "SELECT tilaus_id FROM keskusdivari.Tilaus WHERE käyttäjä_id = $1 AND tila IN ('kesken', 'varattu')",
     [userId]
   );
   if (res.rowCount > 0) {
@@ -221,15 +241,14 @@ const getOrderPrice = async (client, orderId, weight) => {
   if (result.rowCount !== 1) {
     throw new Error("error fetching sum");
   }
-  const itemPrices = parseInt(result.rows[0].price_sum);
-  let shippingPrice;
-  if (weight <= 50) shippingPrice = 2.5;
-  else if (weight <= 250) shippingPrice = 5.0;
-  else if (weight <= 1000) shippingPrice = 10.0;
-  else shippingPrice = 15.0;
-  console.log("item price", itemPrices, ", and shipping:", shippingPrice);
+  const itemPrices = parseFloat(result.rows[0].price_sum);
+  let shippingCost;
+  if (weight <= 50) shippingCost = 2.5;
+  else if (weight <= 250) shippingCost = 5.0;
+  else if (weight <= 1000) shippingCost = 10.0;
+  else shippingCost = 15.0;
 
-  return itemPrices + shippingPrice;
+  return { itemPrice: itemPrices, shippingCost: shippingCost };
 };
 
 export default router;

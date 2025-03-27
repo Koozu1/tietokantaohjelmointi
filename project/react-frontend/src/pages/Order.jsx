@@ -4,38 +4,31 @@ import axios from "axios";
 import { useAppContext } from "../context/AppContext";
 
 const Order = () => {
-  const [books, setBooks] = useState([]);
-  const [confirm, setConfirm] = useState(false);
   const [order, setOrder] = useState(null);
   const [weight, setWeight] = useState(null);
   const [price, setPrice] = useState(null);
+  const [shippingCosts, setShippingCosts] = useState(null);
   const [orderStatus, setOrderStatus] = useState("open");
 
-  const { user, cart, setCart, token } = useAppContext();
+  const { user, token } = useAppContext();
 
   const refreshData = async () => {
     const results = await axios.get(
       `http://localhost:5001/getCart?userId=${user.id}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
+    console.log("Data is", results.data);
     setOrder(results.data.cartItems);
     setWeight(results.data.weight);
-    setPrice(results.data.totalPrice);
-    console.log("got data2: ", results.data);
+    setPrice(results.data.itemPrice);
+    setShippingCosts(
+      results.data.cartItems.length === 0 ? null : results.data.shippingCost
+    );
+    setOrderStatus(results.data.orderStatus);
   };
 
   useEffect(() => {
-    async function getData() {
-      const results = await axios.get(
-        `http://localhost:5001/getCart?userId=${user.id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setOrder(results.data.cartItems);
-      setWeight(results.data.weight);
-      setPrice(results.data.totalPrice);
-      console.log("got data2: ", results.data);
-    }
-    getData();
+    refreshData();
   }, [token, user]);
 
   if (!user) {
@@ -67,7 +60,7 @@ const Order = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
-        setOrderStatus("reserved");
+        setOrderStatus("varattu");
         console.log("GOT SUCCESS!");
       }
     } catch (error) {
@@ -96,9 +89,28 @@ const Order = () => {
     } catch (error) {}
   };
 
+  const handleCancel = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5001/order/cancel`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        setOrderStatus("cancelled");
+        console.log("GOT SUCCESS!");
+      }
+      refreshData();
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      return null;
+    }
+  };
+
   const getButton = () => {
+    console.log("ORDER STATUS IS", orderStatus);
     switch (orderStatus) {
-      case "reserved": {
+      case "varattu": {
         return (
           <>
             <button
@@ -108,7 +120,7 @@ const Order = () => {
               Vahvista tilaus
             </button>
             <button
-              //onClick={}
+              onClick={handleCancel}
               class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
             >
               Peruuta tilaus
@@ -117,7 +129,18 @@ const Order = () => {
         );
       }
       case "completed": {
-        return <p>asdasd tilaus done</p>;
+        return (
+          <div className="bg-green-100 text-green-700 p-3 rounded-lg shadow-md text-center">
+            Tilaus vahvistettu!
+          </div>
+        );
+      }
+      case "cancelled": {
+        return (
+          <div className="bg-red-100 text-red-700 p-3 rounded-lg shadow-md text-center">
+            Tilaus peruttu
+          </div>
+        );
       }
       default: {
         if (order == null || order.length === 0) {
@@ -144,14 +167,25 @@ const Order = () => {
 
             {getCart()}
 
-            <div class="mt-4 text-right">
-              <p class="text-xl font-semibold">
-                {price != null &&
-                  `Yhteenlaskettu hinta postikuluineen: ${price}€`}
-              </p>
-              <p class="text-xl font-semibold">
-                {weight != null && `Paino yhteensä: ${weight}g`}
-              </p>
+            <div class="mt-4 text-right space-y-2">
+              {price != null && (
+                <p class="text-lg font-medium">
+                  Hinta: <span class="font-semibold">{price}€</span>
+                </p>
+              )}
+              {shippingCosts != null && (
+                <p class="text-lg font-medium">Postikulut: {shippingCosts}€</p>
+              )}
+              {price != null && shippingCosts != null && (
+                <p class="text-xl font-semibold border-t pt-2">
+                  Yhteensä: {price + shippingCosts}€
+                </p>
+              )}
+              {weight != null && (
+                <p class="text-lg font-medium text-gray-700">
+                  Tilauksen paino: {weight}g
+                </p>
+              )}
             </div>
           </div>
 
