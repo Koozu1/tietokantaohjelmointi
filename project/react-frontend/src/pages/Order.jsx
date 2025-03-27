@@ -159,42 +159,38 @@ const Order = () => {
   };
 
   return (
-    <>
-      <div class="bg-gray-100 min-h-screen flex items-center justify-center">
-        <div class="w-full max-w-6xl mx-auto grid grid-cols-3 gap-4 p-4">
-          <div class="col-span-2 bg-white shadow rounded-lg p-4">
-            <h2 class="text-2xl font-bold mb-4">Ostoskori</h2>
+    <div class="bg-white min-h-screen flex items-start justify-cente p-4 space-y-4">
+      <div class="max-w-[800px] w-full mx-auto p-4 space-y-4 bg-[#f9f9f9] shadow-md rounded-lg">
+        <div class="bg-white shadow rounded-lg p-4 bg-[#f9f9f9]">
+          <h2 class="text-2xl font-bold mb-4">Ostoskori</h2>
 
-            {getCart()}
-
-            <div class="mt-4 text-right space-y-2">
-              {price != null && (
-                <p class="text-lg font-medium">
-                  Hinta: <span class="font-semibold">{price}€</span>
-                </p>
-              )}
-              {shippingCosts != null && (
-                <p class="text-lg font-medium">Postikulut: {shippingCosts}€</p>
-              )}
-              {price != null && shippingCosts != null && (
-                <p class="text-xl font-semibold border-t pt-2">
-                  Yhteensä: {price + shippingCosts}€
-                </p>
-              )}
-              {weight != null && (
-                <p class="text-lg font-medium text-gray-700">
-                  Tilauksen paino: {weight}g
-                </p>
-              )}
-            </div>
+          {getCart()}
+          <div class="mt-4 text-right space-y-2">
+            {price != null && (
+              <p class="text-lg font-medium">
+                Hinta: <span class="font-semibold">{price}€</span>
+              </p>
+            )}
+            {shippingCosts != null && (
+              <p class="text-lg font-medium">Postikulut: {shippingCosts}€</p>
+            )}
+            {price != null && shippingCosts != null && (
+              <p class="text-xl font-semibold border-t pt-2">
+                Yhteensä: {price + shippingCosts}€
+              </p>
+            )}
+            {weight != null && (
+              <p class="text-lg font-medium text-gray-700">
+                Tilauksen paino: {weight}g
+              </p>
+            )}
           </div>
-
           <div class="col-span-1 bg-white shadow rounded-lg p-4 flex flex-col justify-center space-y-4">
             {getButton()}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

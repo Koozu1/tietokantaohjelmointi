@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Notification from "../components/Notification";
 
-const LisaaTeos = () => {
+const AddItem = () => {
   const [nimi, setNimi] = useState("");
   const [tekijä, setTekijä] = useState("");
   const [isbn, setIsbn] = useState("");
@@ -19,7 +19,7 @@ const LisaaTeos = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newTeos = { nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, teosluokka, paino, hinta, sisäänostohinta };
-    const url = activeTab === "d1" ? "http://localhost:5001/lisaateos" : "http://localhost:5001/lisaateoskeskusdivari";
+    const url = activeTab === "d1" ? "http://localhost:5001/additemd1" : "http://localhost:5001/additemd2";
 
     try {
       const response = await axios.post(url, newTeos);
@@ -45,7 +45,7 @@ const LisaaTeos = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-[800px]">
+    <div className="max-w-[800px] w-full mx-auto p-4 space-y-4 bg-[#f9f9f9] shadow-md rounded-lg">
       <Link to="/frontpage" className="text-blue-500 hover:underline">Takaisin etusivulle</Link>
       <h1 className="text-2xl font-bold mb-4">Lisää Teos</h1>
       <Notification message={notification.message} type={notification.type} />
@@ -54,13 +54,13 @@ const LisaaTeos = () => {
           className={`px-4 py-2 ${activeTab === "d1" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"} rounded-t-lg`}
           onClick={() => setActiveTab("d1")}
         >
-          D1
+          Lassen Lehti (D1)
         </button>
         <button
           className={`px-4 py-2 ${activeTab === "keskusdivari" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"} rounded-t-lg`}
           onClick={() => setActiveTab("keskusdivari")}
         >
-          Keskusdivari
+          Galleinn Galle (D2)
         </button>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -71,7 +71,7 @@ const LisaaTeos = () => {
             value={nimi}
             onChange={(e) => setNimi(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
@@ -81,7 +81,7 @@ const LisaaTeos = () => {
             value={tekijä}
             onChange={(e) => setTekijä(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
@@ -91,7 +91,7 @@ const LisaaTeos = () => {
             value={isbn}
             onChange={(e) => setIsbn(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
@@ -103,7 +103,7 @@ const LisaaTeos = () => {
             min="1800"
             max="3000"
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
@@ -112,7 +112,7 @@ const LisaaTeos = () => {
             value={teostyyppi}
             onChange={(e) => setTeostyyppi(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="">Valitse teostyyppi</option>
             <option value="cd">CD</option>
@@ -127,7 +127,7 @@ const LisaaTeos = () => {
     value={teosluokka}
     onChange={(e) => setTeosluokka(e.target.value)}
     required
-    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
   >
     <option value="">Valitse teosluokka</option>
     <option value="romantiikka">Romantiikka</option>
@@ -151,7 +151,7 @@ const LisaaTeos = () => {
             value={paino}
             onChange={(e) => setPaino(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
@@ -162,7 +162,7 @@ const LisaaTeos = () => {
             value={hinta}
             onChange={(e) => setHinta(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
@@ -173,7 +173,7 @@ const LisaaTeos = () => {
             value={sisäänostohinta}
             onChange={(e) => setSisäänostohinta(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -184,4 +184,4 @@ const LisaaTeos = () => {
   );
 };
 
-export default LisaaTeos;
+export default AddItem;
