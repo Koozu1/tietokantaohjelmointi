@@ -63,8 +63,8 @@ CREATE OR REPLACE FUNCTION d1_divari.nide_copy_trigger_func()
 RETURNS TRIGGER AS
 $$
 BEGIN
-    IF TG_ARGV[0] = 'triggered' THEN
-        RETURN NEW;  -- Estetään rekursiivinen päivitys
+    IF TG_OP = 'UPDATE' AND TG_ARGV[0] = 'triggered' THEN
+        RETURN NEW;  -- Estetään rekursiivinen päivitys vain päivityksissä
     END IF;
 
     IF TG_OP = 'INSERT' THEN
@@ -99,8 +99,9 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE TRIGGER nide_copy_trigger
-AFTER INSERT OR UPDATE
+AFTER INSERT OR UPDATE OR DELETE
 ON d1_divari.nide
 FOR EACH ROW
-EXECUTE FUNCTION d1_divari.nide_copy_trigger_func('triggered');  -- Annetaan flagiksi 'triggered'
+EXECUTE FUNCTION d1_divari.nide_copy_trigger_func('triggered');
+
 
