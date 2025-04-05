@@ -18,9 +18,9 @@ CREATE TYPE teosluokka AS ENUM ('romantiikka', 'seikkailu', 'toiminta', 'draama'
 CREATE TABLE keskusdivari.käyttäjä (
     käyttäjä_id SERIAL PRIMARY KEY,
     nimi VARCHAR(50),
-    osoite  VARCHAR(100),
-    email VARCHAR(50),
+    osoite  VARCHAR(100),    
     puhelin VARCHAR(13),
+    email VARCHAR(50),
     salasana VARCHAR(60),
     pääkäyttäjä BOOLEAN
 );

@@ -149,7 +149,7 @@ const Order = () => {
         return (
           <button
             onClick={handleReserve}
-            class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+            class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 hover:cursor-pointer"
           >
             Tee tilaus
           </button>
@@ -185,7 +185,7 @@ const Order = () => {
               </p>
             )}
           </div>
-          <div class="col-span-1 bg-white shadow rounded-lg p-4 flex flex-col justify-center space-y-4">
+          <div class="col-span-1 rounded-lg p-4 flex flex-col justify-center space-y-4">
             {getButton()}
           </div>
         </div>

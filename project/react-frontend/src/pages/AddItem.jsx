@@ -51,13 +51,13 @@ const AddItem = () => {
       <Notification message={notification.message} type={notification.type} />
       <div className="mb-4">
         <button
-          className={`px-4 py-2 ${activeTab === "d1" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"} rounded-t-lg`}
+          className={`px-4 py-2 ${activeTab === "d1" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700 hover:cursor-pointer"} rounded-t-lg`}
           onClick={() => setActiveTab("d1")}
         >
           Lassen Lehti (D1)
         </button>
         <button
-          className={`px-4 py-2 ${activeTab === "keskusdivari" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"} rounded-t-lg`}
+          className={`px-4 py-2 ${activeTab === "keskusdivari" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700 hover:cursor-pointer"} rounded-t-lg`}
           onClick={() => setActiveTab("keskusdivari")}
         >
           Galleinn Galle (D2)
@@ -65,7 +65,7 @@ const AddItem = () => {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Nimi:</label>
+          <label className="block text-sm font-medium text-gray-700">Nimi*:</label>
           <input
             type="text"
             value={nimi}
@@ -75,7 +75,7 @@ const AddItem = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Tekijä:</label>
+          <label className="block text-sm font-medium text-gray-700">Tekijä*:</label>
           <input
             type="text"
             value={tekijä}
@@ -85,7 +85,7 @@ const AddItem = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">ISBN:</label>
+          <label className="block text-sm font-medium text-gray-700">ISBN*:</label>
           <input
             type="text"
             value={isbn}
@@ -95,7 +95,7 @@ const AddItem = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Julkaisuvuosi:</label>
+          <label className="block text-sm font-medium text-gray-700">Julkaisuvuosi*:</label>
           <input
             type="number"
             value={julkaisuvuosi}
@@ -107,12 +107,12 @@ const AddItem = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Teostyyppi:</label>
+          <label className="block text-sm font-medium text-gray-700">Teostyyppi*:</label>
           <select
             value={teostyyppi}
             onChange={(e) => setTeostyyppi(e.target.value)}
             required
-            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm hover:cursor-pointer"
           >
             <option value="">Valitse teostyyppi</option>
             <option value="cd">CD</option>
@@ -122,12 +122,12 @@ const AddItem = () => {
           </select>
         </div>
         <div>
-  <label className="block text-sm font-medium text-gray-700">Teosluokka:</label>
+  <label className="block text-sm font-medium text-gray-700">Teosluokka*:</label>
   <select
     value={teosluokka}
     onChange={(e) => setTeosluokka(e.target.value)}
     required
-    className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm hover:cursor-pointer"
   >
     <option value="">Valitse teosluokka</option>
     <option value="romantiikka">Romantiikka</option>
@@ -145,7 +145,7 @@ const AddItem = () => {
   </select>
 </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Paino(g):</label>
+          <label className="block text-sm font-medium text-gray-700">Paino(g)*:</label>
           <input
             type="number"
             value={paino}
@@ -155,7 +155,7 @@ const AddItem = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Hinta(€):</label>
+          <label className="block text-sm font-medium text-gray-700">Hinta(€)*:</label>
           <input
             type="number"
             step="0,00"
@@ -176,7 +176,7 @@ const AddItem = () => {
             className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
-        <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:cursor-pointer">
           Lisää
         </button>
       </form>

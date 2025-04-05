@@ -21,15 +21,15 @@ router.post("/additemd2", async (req, res) => {
       // Insert a new teos and get the new teos_id
       const teosResult = await pool.query(
         'INSERT INTO keskusdivari.teos (nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, teosluokka, paino, lähde_skeema, divari_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING teos_id',
-        [nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, teosluokka, paino, 'keskusdivari', 1]
+        [nimi, tekijä, isbn, julkaisuvuosi, teostyyppi, teosluokka, paino, 'keskus', 1]
       );
-      teos_id = teosResult.rows[0].teos_id + 1000;
+      teos_id = teosResult.rows[0].teos_id;
     }
 
     // Insert a new nide with the teos_id
     const nideResult = await pool.query(
       'INSERT INTO keskusdivari.nide (hinta, sisäänostohinta, lähde_skeema, tila, teos_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [hinta, sisäänostohinta, 'keskusdivari', 'vapaa', teos_id]
+      [hinta, sisäänostohinta, 'keskus', 'vapaa', teos_id]
     );
 
     res.status(201).json({ teos_id, nide: nideResult.rows[0] });

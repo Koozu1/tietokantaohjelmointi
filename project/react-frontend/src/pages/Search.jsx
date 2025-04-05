@@ -63,6 +63,8 @@ const Search = () => {
   };
 
   const handleSearch = async () => {
+    setBooks([]);
+
     try {
       const response = await axios.get(
         `http://localhost:5001/search?author=${author}&title=${title}&type=${type}&genre=${genre}`,
@@ -107,9 +109,10 @@ const Search = () => {
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          style={styles.input}
+          style={styles.input} 
+          className="hover:cursor-pointer"
         >
-        <option value="">Valitse teostyyppi</option>
+        <option value="" >Valitse teostyyppi</option>
         <option value="cd">CD</option>
         <option value="kirja">Kirja</option>
         <option value="lehti">Lehti</option>
@@ -123,6 +126,7 @@ const Search = () => {
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
           style={styles.input}
+          className="hover:cursor-pointer"
         >
         <option value="">Valitse teosluokka</option>
         <option value="romantiikka">Romantiikka</option>
@@ -152,10 +156,9 @@ const Search = () => {
                 {index + 1}: {book.nimi}
               </h3>
               <p style={styles.bookDetail}>Tekijä: {book.tekijä}</p>
-              <p style={styles.bookDetail}>
-                Julkaisuvuosi: {book.julkaisuvuosi}
-              </p>
+              <p style={styles.bookDetail}>Julkaisuvuosi: {book.julkaisuvuosi}</p>
               <p style={styles.bookDetail}>Teostyyppi: {book.teostyyppi}</p>
+              <p style={styles.bookDetail}>Teosluokka: {book.genre}</p>
               <p style={styles.bookDetail}>Paino: {book.paino} g</p>
               <p style={styles.bookDetail}>Hinta: {book.hinta} €</p>
               {!cart.has(book.nide_id) ? (
@@ -174,7 +177,7 @@ const Search = () => {
                     deleteFromCart(book.nide_id);
                   }}
                 >
-                  Poista ostoskorista (TBA)
+                  Poista ostoskorista
                 </button>
               )}
             </div>

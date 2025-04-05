@@ -16,8 +16,6 @@ BEGIN
             (NEW.teos_id, NEW.nimi, NEW.tekijä, NEW.isbn, NEW.julkaisuvuosi, NEW.teostyyppi,
              NEW.teosluokka, NEW.paino, NEW.lähde_skeema, NEW.divari_id);
 
-        RETURN NEW;
-
     ELSIF TG_OP = 'UPDATE' THEN
         -- Kun D1_divari.Teos -rivin tietoja päivitetään
         UPDATE keskusdivari.teos
@@ -32,19 +30,18 @@ BEGIN
                divari_id = NEW.divari_id
          WHERE teos_id = OLD.teos_id;
 
-        RETURN NEW;
-        
     ELSIF TG_OP = 'DELETE' THEN
         -- Kun D1_divari.Teos -rivi poistetaan
         DELETE FROM keskusdivari.teos
          WHERE teos_id = OLD.teos_id;
-
-        RETURN OLD;
+        
     END IF;
 
+    -- No need to return anything in AFTER triggers
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 
@@ -63,17 +60,11 @@ CREATE OR REPLACE FUNCTION d1_divari.nide_copy_trigger_func()
 RETURNS TRIGGER AS
 $$
 BEGIN
-    IF TG_OP = 'UPDATE' AND TG_ARGV[0] = 'triggered' THEN
-        RETURN NEW;  -- Estetään rekursiivinen päivitys vain päivityksissä
-    END IF;
-
     IF TG_OP = 'INSERT' THEN
         INSERT INTO keskusdivari.nide
             (nide_id, hinta, sisäänostohinta, lähde_skeema, tila, teos_id)
         VALUES
             (NEW.nide_id, NEW.hinta, NEW.sisäänostohinta, NEW.lähde_skeema, NEW.tila, NEW.teos_id);
-
-        RETURN NEW;
 
     ELSIF TG_OP = 'UPDATE' THEN
         UPDATE keskusdivari.nide
@@ -82,18 +73,14 @@ BEGIN
             tila = NEW.tila,
             teos_id = NEW.teos_id
         WHERE nide_id = OLD.nide_id;
-
-        RETURN NEW;
         
     ELSIF TG_OP = 'DELETE' THEN
         DELETE FROM keskusdivari.nide
         WHERE nide_id = OLD.nide_id;
-
-        RETURN OLD;
         
     END IF;
 
-    RETURN NULL;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -102,6 +89,6 @@ CREATE TRIGGER nide_copy_trigger
 AFTER INSERT OR UPDATE OR DELETE
 ON d1_divari.nide
 FOR EACH ROW
-EXECUTE FUNCTION d1_divari.nide_copy_trigger_func('triggered');
+EXECUTE FUNCTION d1_divari.nide_copy_trigger_func();
 
 

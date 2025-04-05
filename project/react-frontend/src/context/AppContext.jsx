@@ -12,6 +12,7 @@ export const AppProvider = ({ children }) => {
     let user;
     try {
       user = JSON.parse(localStorage.getItem("user"));
+      console.log(user);
     } catch {
       logout();
     }

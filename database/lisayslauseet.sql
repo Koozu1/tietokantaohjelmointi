@@ -14,9 +14,7 @@ ALTER SEQUENCE keskusdivari.nide_nide_id_seq RESTART WITH 1000;
 INSERT INTO keskusdivari.käyttäjä
 (nimi, osoite, email, puhelin, salasana, pääkäyttäjä)
 VALUES
-('Matti Meikäläinen', 'Keskuskatu 10, Helsinki', 'matti@meikalainen.fi', '0401234567', 'testipää', TRUE),
-('Maija Tekijä',       'Kujatie 1, Vantaa',       'maija@tekija.fi',       '0507654321', 'testiperus', FALSE),
-('Kari Kanta',         'Opintie 5, Espoo',        'kari.k@example.com',    '0450012345', NULL, FALSE);
+('Matti Meikäläinen', 'Keskuskatu 10, Helsinki', 'matti@meikalainen.fi', '0401234567', 'testi1', FALSE);
 
 -- 2) Divari_D2
 INSERT INTO keskusdivari.divari_d2
