@@ -67,6 +67,7 @@ CREATE TABLE keskusdivari.tilaus (
     tilaus_id SERIAL PRIMARY KEY,
     divari_id INT,
 	käyttäjä_id INT,
+	myyntipäivä DATE,
     tila tilauksen_tila,
     FOREIGN KEY (divari_id) REFERENCES keskusdivari.divari_d2(divari_id),
     FOREIGN KEY (käyttäjä_id) REFERENCES keskusdivari.käyttäjä(käyttäjä_id)
