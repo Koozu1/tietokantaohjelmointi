@@ -34,7 +34,7 @@ const Register = () => {
   return (
     <form 
       onSubmit={handleRegister} 
-      className="max-w-[800px] w-full mx-auto p-6 space-y-4 bg-[#f9f9f9] shadow-md rounded-lg"
+      className="m-[10px] max-w-[800px] w-full mx-auto p-6 space-y-4 bg-[#f9f9f9] shadow-md rounded-lg"
     >
       <h2 className="text-2xl font-semibold text-center">Rekisteröidy</h2>
 

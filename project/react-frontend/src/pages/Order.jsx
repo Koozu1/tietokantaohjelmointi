@@ -168,15 +168,15 @@ const Order = () => {
           <div class="mt-4 text-right space-y-2">
             {price != null && (
               <p class="text-lg font-medium">
-                Hinta: <span class="font-semibold">{price}€</span>
+                Hinta: <span class="font-semibold">{price.toFixed(2)}€</span>
               </p>
             )}
             {shippingCosts != null && (
-              <p class="text-lg font-medium">Postikulut: {shippingCosts}€</p>
+              <p class="text-lg font-medium">Postikulut: {shippingCosts.toFixed(2)}€</p>
             )}
             {price != null && shippingCosts != null && (
               <p class="text-xl font-semibold border-t pt-2">
-                Yhteensä: {price + shippingCosts}€
+                Yhteensä: {(price + shippingCosts).toFixed(2)}€
               </p>
             )}
             {weight != null && (

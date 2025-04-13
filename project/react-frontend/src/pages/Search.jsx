@@ -193,7 +193,7 @@ const Search = () => {
 const styles = {
   container: {
     maxWidth: "800px",
-    margin: "20px auto",
+    margin: "10px auto",
     padding: "20px",
     fontFamily: "'Arial', sans-serif",
     backgroundColor: "#f9f9f9",

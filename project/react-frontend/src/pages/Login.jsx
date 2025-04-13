@@ -35,7 +35,7 @@ const Login = () => {
   if (user) return <Navigate to="/frontpage" />;
 
   return (
-    <form onSubmit={handleLogin} className="max-w-[800px] w-full mx-auto p-4 space-y-4 bg-[#f9f9f9] shadow-md rounded-lg">
+    <form onSubmit={handleLogin} className="m-[10px] max-w-[800px] auto w-full mx-auto p-4 space-y-4 bg-[#f9f9f9] shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold text-center">Kirjaudu sisään</h2>
       <input
         type="email"
