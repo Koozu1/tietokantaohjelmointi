@@ -158,7 +158,7 @@ const Search = () => {
               <p style={styles.bookDetail}>Tekijä: {book.tekijä}</p>
               <p style={styles.bookDetail}>Julkaisuvuosi: {book.julkaisuvuosi}</p>
               <p style={styles.bookDetail}>Teostyyppi: {book.teostyyppi}</p>
-              <p style={styles.bookDetail}>Teosluokka: {book.genre}</p>
+              <p style={styles.bookDetail}>Teosluokka: {book.teosluokka}</p>
               <p style={styles.bookDetail}>Paino: {book.paino} g</p>
               <p style={styles.bookDetail}>Hinta: {book.hinta} €</p>
               {!cart.has(book.nide_id) ? (

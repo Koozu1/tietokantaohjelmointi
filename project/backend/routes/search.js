@@ -10,9 +10,18 @@ router.get("/search", verifyToken, async (req, res) => {
   const { author, title, type, genre } = req.query;
 
   let baseQuery = `
-  SELECT t.*, n.hinta, n.nide_id
-  FROM Keskusdivari.Teos t
-  JOIN Keskusdivari.Nide n ON t.teos_id = n.teos_id
+  SELECT 
+    t.teos_id, 
+    t.nimi, 
+    t.tekijä, 
+    t.julkaisuvuosi, 
+    t.teostyyppi, 
+    t.teosluokka, 
+    t.paino,
+    n.hinta, 
+    n.nide_id
+  FROM keskusdivari.teos t
+  JOIN keskusdivari.nide n ON t.teos_id = n.teos_id
   WHERE n.tila = 'vapaa'
   `;
 
