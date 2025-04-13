@@ -100,7 +100,9 @@ router.post("/order/confirm", verifyToken, async (req, res) => {
       [weight, orderId, itemPrice + shippingCost]
     );
     await client.query(
-      `UPDATE keskusdivari.tilaus SET tila = 'suoritettu' WHERE tilaus_id = $1`,
+      `UPDATE keskusdivari.tilaus 
+       SET tila = 'suoritettu', myyntipäivä = CURRENT_DATE 
+       WHERE tilaus_id = $1`,
       [orderId]
     );
     await orderAllItems(client, orderId);
